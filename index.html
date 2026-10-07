@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Frequência de Estagiários • v8.2</title>
+<title>Frequência de Estagiários • v8.4 Firebase</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f4f6f8;color:#172033}header{background:#17365d;color:#fff;padding:14px 16px;position:sticky;top:0;z-index:20}header h1{margin:0;font-size:21px}header p{margin:4px 0 0;font-size:12px;opacity:.9}main{max-width:1150px;margin:14px auto;padding:0 12px}.card{background:#fff;border-radius:14px;padding:15px;margin-bottom:12px;box-shadow:0 2px 9px #00000012}h2{font-size:17px;margin:0 0 10px}h3{font-size:14px;margin:0 0 7px}.muted{font-size:12px;color:#667085}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}label{font-size:12px;font-weight:700}input,select,textarea{width:100%;padding:9px;border:1px solid #cbd5e1;border-radius:9px;margin-top:4px;font:inherit;background:#fff}textarea{min-height:110px}.actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}button{border:0;border-radius:9px;padding:9px 12px;font:inherit;font-weight:700;cursor:pointer}.primary{background:#17365d;color:#fff}.success{background:#166534;color:#fff}.secondary{background:#e5e7eb;color:#111827}.danger{background:#fee2e2;color:#991b1b}.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-bottom:12px}.tab{background:#fff;border:1px solid #dbe2ea;color:#17365d;min-height:40px}.tab.active{background:#17365d;color:#fff}.panel{display:none}.panel.active{display:block}.prof-list,.student-list,.location-list{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}.row{border:1px solid #e2e8f0;border-radius:10px;padding:9px}.row strong{font-size:13px}.row small{display:block;color:#667085;margin-top:3px;font-size:11px}.alloc-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}.shift-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}.shift{border:1px solid #dbe2ea;border-radius:11px;padding:11px}.selected{background:#f8fafc;border-radius:8px;padding:8px;min-height:36px;font-size:12px;margin:7px 0}.count{font-size:12px;font-weight:bold;color:#17365d}.status{font-size:11px;padding:7px;border-radius:7px;background:#fff7ed;color:#9a3412;margin:6px 0}.status.ok{background:#ecfdf3;color:#166534}.status.mine{background:#eff6ff;color:#1d4ed8}.checks{border:1px solid #e5e7eb;border-radius:9px;max-height:48vh;overflow:auto}.check{display:flex;align-items:center;gap:8px;padding:9px;border-bottom:1px solid #f1f5f9;font-size:13px}.check:last-child{border:0}.check input{width:auto;margin:0}.tablewrap{overflow:auto}table{border-collapse:collapse;width:100%;font-size:12px}th,td{border:1px solid #cbd5e1;padding:7px;vertical-align:top}th{background:#e5e7eb;text-align:center}.summary{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.metric{border:1px solid #e2e8f0;border-radius:10px;padding:9px}.metric b{display:block;font-size:17px;margin-top:4px}.badge{display:inline-block;background:#e8eef6;padding:4px 7px;border-radius:99px;font-size:10px;font-weight:bold}.modalback{display:none;position:fixed;inset:0;background:#0008;z-index:50;padding:15px}.modal{background:#fff;max-width:720px;width:100%;max-height:92vh;margin:auto;border-radius:14px;padding:15px;overflow:auto}.modalhead{display:flex;justify-content:space-between;gap:10px;align-items:center}.notice{padding:9px;border-radius:9px;background:#eff6ff;font-size:12px;margin-bottom:9px}.report{display:none}.compact-head{display:grid;grid-template-columns:minmax(0,2fr) minmax(70px,.55fr) minmax(105px,.75fr);gap:8px;align-items:end}.small-field input{min-width:0}.daily-box{padding:9px;border:1px solid #dbe2ea;border-radius:9px;background:#f8fafc;margin-top:8px}.location-tag{font-size:10px;font-weight:700;background:#eef2f7;padding:3px 6px;border-radius:999px;display:inline-block}.class-groups-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:start}.class-group{margin-top:0;min-width:0}.class-title{display:flex;justify-content:space-between;align-items:center;background:#17365d;color:#fff;border-radius:9px;padding:10px 12px;font-size:14px;font-weight:700}.class-title span{font-size:11px;font-weight:400;opacity:.9}.class-group>.student-list{display:grid;grid-template-columns:1fr;gap:7px;margin-top:7px}.student-row{border:1px solid #dbe2ea;border-radius:10px;padding:10px 12px;background:#fff;display:grid;grid-template-columns:1fr;gap:7px;align-items:start}.student-name{font-size:14px;font-weight:700;line-height:1.3;min-width:0;overflow-wrap:anywhere}.student-name small{display:none}.student-field{min-width:0}.student-field label{font-size:10px;color:#667085}.student-field select{margin-top:3px;font-size:13px;padding:8px}.student-summary{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0 10px}.student-summary .badge{background:#eef4fb;color:#17365d}.edit-prof-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.edit-prof-grid .full{grid-column:1/-1}@media(max-width:600px){.edit-prof-grid{grid-template-columns:1fr}.edit-prof-grid .full{grid-column:auto}}
 @media(max-width:900px){.class-groups-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.shift-grid{grid-template-columns:1fr}.prof-list,.location-list,.summary{grid-template-columns:1fr 1fr;gap:6px}.student-row{padding:9px}.student-controls{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:7px}.card{padding:11px;margin-bottom:9px}input,select,textarea{padding:8px;font-size:14px}.row{padding:8px}.tabs button{padding:7px 5px;font-size:11px;min-height:40px}.compact-head{grid-template-columns:minmax(0,1fr) 65px 105px;gap:6px}.compact-head label{font-size:11px}.compact-head input,.compact-head select{font-size:13px;padding:8px}}
@@ -18,7 +18,7 @@
 .student-combo{position:relative;margin-top:4px}.student-combo-button{width:100%;text-align:left;background:#fff;border:1px solid #cbd5e1;color:#172033;font-weight:600;padding:9px;border-radius:9px;display:flex;justify-content:space-between;align-items:center}.student-combo-button span{font-size:12px;color:#667085}.student-combo-menu{display:none;position:absolute;left:0;right:0;top:calc(100% + 3px);background:#2f332d;border:1px solid #cbd5e1;border-radius:10px;box-shadow:0 8px 22px #0003;z-index:80;overflow:hidden}.student-combo.open .student-combo-menu{display:block}.student-combo-search{margin:0!important;border:0!important;border-bottom:1px solid #555b54!important;border-radius:0!important;padding:10px!important;outline:none;background:#2f332d!important;color:#fff!important}.student-combo-search::placeholder{color:#d1d5db!important}.student-combo-options{max-height:260px;overflow:auto}.student-combo-option{padding:10px 11px;border-bottom:1px solid #555b54;cursor:pointer;font-size:13px;background:#2f332d;color:#fff}.student-combo-option:hover,.student-combo-option.active{background:#444a42}.student-combo-empty{padding:10px;color:#d1d5db;font-size:12px;background:#2f332d}.alloc-actions{display:flex;gap:4px;justify-content:center;align-items:center}.alloc-actions .mini-action{min-width:30px;height:30px;padding:0 5px;display:inline-flex;align-items:center;justify-content:center}.alloc-table .local-cell{min-width:105px}.alloc-table .shift-cell{min-width:125px}
 </style></head>
 <body>
-<header><h1>Frequência de Estagiários</h1><p>Controle de frequência, valores e relatórios • versão online em teste • v8.3 Firebase</p></header>
+<header><h1>Frequência de Estagiários</h1><p>Controle de frequência, valores e relatórios • versão online em teste • v8.5 Firebase</p></header>
 <main class="screen">
 <div class="tabs">
 <button id="tabDash" class="tab active" onclick="showTab('dashboard',this)">Visão geral</button>
@@ -29,10 +29,12 @@
 <button id="tabTeacher" class="tab" style="display:none" onclick="showTab('teacher',this)">Meu painel</button>
 <button id="tabLaunch" class="tab" onclick="showTab('launch',this)">Lançar</button>
 <button id="tabReports" class="tab" onclick="showTab('reports',this)">Relatórios</button>
+<button id="tabAccess" class="tab" style="display:none" onclick="showTab('access',this)">Acessos <span id="pendingBadge" class="pending-badge">0</span></button>
 </div>
 <section id="dashboard" class="panel active"><div class="card"><h2>Painel administrativo</h2><p class="muted">Versão offline para testes. A instituição é única e os locais de estágio são cadastrados separadamente.</p><div class="summary"><div class="metric">Profissionais<b id="mProf">0</b></div><div class="metric">Alunos<b id="mStud">0</b></div><div class="metric">Lançamentos<b id="mDays">0</b></div><div class="metric">Total contabilizado<b id="mMoney">R$ 0,00</b></div></div></div>
 <div class="card"><h2>Perfil em teste</h2><div class="grid"><label>Modo de acesso<select id="role" onchange="renderAll()"><option value="creator">Criador do aplicativo</option><option value="admin">Administrador da instituição</option><option value="teacher">Professor / técnico</option></select></label><label>Usuário selecionado<select id="roleUser" onchange="renderAll()"></select></label><div><span class="badge" id="roleBadge">CRIADOR</span><p class="muted" id="roleHelp">Acesso estrutural.</p></div></div></div>
 <div class="card"><h2>Últimos lançamentos</h2><div class="tablewrap"><table><thead><tr><th>Data</th><th>Profissional</th><th>Local</th><th>Turno</th><th>Alunos</th><th>Valor</th></tr></thead><tbody id="dashTable"></tbody></table></div></div></section>
+<section id="access" class="panel"><div class="card"><h2>👥 Solicitações de acesso</h2><p class="muted">Aqui o administrador acompanha os cadastros feitos pelos professores. Um cadastro aprovado poderá entrar no sistema; um cadastro bloqueado não poderá acessar.</p><div class="actions"><button class="secondary" onclick="loadAccessRequests()">↻ Atualizar</button><span class="badge" id="accessSummary">0 pendentes</span></div><div id="accessList" class="access-list" style="margin-top:10px"><div class="notice">Carregando solicitações...</div></div></div><div class="card"><h2>🔐 Administradores</h2><p class="muted">Mais de uma pessoa pode ser administradora. Cada conta usa seu próprio e-mail e senha.</p><div id="adminList" class="access-list"></div></div></section>
 <section id="teacher" class="panel"><div class="card"><h2>Área do professor / técnico</h2><p class="muted">Visão de teste do professor após o login.</p><div class="summary"><div class="metric">Professor<b id="tmProf">-</b></div><div class="metric">CRTR<b id="tmCrtr">-</b></div><div class="metric">Horas no mês<b id="tmHours">0 h</b></div><div class="metric">Valor acumulado<b id="tmMoney">R$ 0,00</b></div></div></div><div class="card"><h2>Meu relatório</h2><p class="muted">Confira dias, alunos, horas e valores. Ao finalizar o relatório, confirme ciência e concordância com os lançamentos apresentados.</p><div class="actions"><button class="primary" onclick="openMyReport()">📊 Ver meu relatório</button></div></div><div class="card"><h2>Meus lançamentos</h2><div class="tablewrap"><table><thead><tr><th>Data</th><th>Local</th><th>Turno</th><th>Alunos</th><th>Horas</th><th>Valor</th></tr></thead><tbody id="teacherTable"></tbody></table></div></div></section>
 <section id="config" class="panel"><div class="card"><h2>Configuração da instituição</h2><div class="grid"><label>Instituição<input id="institution" value="ICB – Instituto de Conhecimento da Bahia"></label><label>E-mail da instituição<input id="institutionEmail" type="email" placeholder="escola@exemplo.com"></label><label>E-mail do administrador<input id="adminEmail" type="email" placeholder="administracao@escola.com"></label><label>Valor por aluno / mês<input id="valuePerMonth" inputmode="decimal" placeholder="100,00"></label><label>Valor calculado por aluno / dia<input id="valuePerDay" readonly></label><label>Período inicial<input id="startDate" type="date"></label><label>Período final<input id="endDate" type="date"></label></div><div class="daily-box"><b>Critério financeiro:</b> R$ 100,00 por aluno/mês ÷ 30 dias = <b id="dailyExplain">R$ 3,33 por aluno/dia</b>. O cálculo interno usa o valor exato de R$ 100 ÷ 30, e o relatório mostra duas casas decimais.</div><div class="notice" style="margin-top:9px">A instituição é única: ICB. Os locais abaixo são os locais de estágio e podem ser vários.</div><button class="primary" onclick="saveConfig()">Salvar configuração</button><div class="notice" style="margin-top:10px"><b>Backup dos cadastros</b><br>Use <b>Fazer backup</b> para salvar uma cópia de todos os cadastros, alocações e lançamentos. Quando receber uma nova versão do HTML, use <b>Restaurar backup</b> para recuperar os dados.</div><div class="actions"><button class="success" onclick="downloadBackup()">⬇ Fazer backup</button><label class="secondary" style="display:inline-flex;align-items:center;gap:6px;cursor:pointer">⬆ Restaurar backup<input type="file" accept="application/json,.json" onchange="restoreBackup(this)" style="display:none"></label><button class="danger" onclick="resetAppData()">Reiniciar dados locais</button></div></div>
 <div class="card"><h2>Locais de estágio</h2><p class="muted">Cadastre os locais para depois alocar cada aluno a um local e a um horário.</p><div class="grid"><label>Novo local de estágio<input id="newLocation" placeholder="Ex.: UPA IRC"></label><div class="actions" style="align-items:end"><button class="primary" onclick="addLocation()">+ Cadastrar local</button></div></div><div id="locationList" class="location-list"></div></div></section>
@@ -51,7 +53,9 @@
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <style>
-.firebase-login-overlay{position:fixed;inset:0;background:rgba(18,20,18,.96);z-index:99999;display:flex;align-items:center;justify-content:center;padding:18px}.firebase-login-card{width:min(430px,100%);background:#fff;border-radius:16px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.4)}.firebase-login-card h2{margin:0 0 6px}.firebase-login-card p{font-size:13px;color:#555}.firebase-login-card input{width:100%;box-sizing:border-box;padding:12px;border:1px solid #bbb;border-radius:9px;margin:7px 0}.firebase-login-card button{width:100%;padding:12px;border:0;border-radius:9px;background:#2f332d;color:#fff;font-weight:700;margin-top:8px}.firebase-login-card .secondary-login{background:#e9ece8;color:#20231f}.firebase-login-status{margin-top:10px;font-size:12px;min-height:18px}.firebase-user-badge{position:fixed;top:8px;right:8px;z-index:99998;background:#2f332d;color:#fff;padding:7px 10px;border-radius:999px;font-size:11px;display:none}.firebase-logout{position:fixed;top:8px;right:8px;z-index:99998;margin-right:0;transform:translateY(36px);display:none;border:0;border-radius:8px;padding:6px 9px;background:#eee;color:#222;font-size:11px}.firebase-auth-hidden{display:none!important}.firebase-auth-title{margin-top:0}.firebase-register-fields{display:none}.firebase-register-fields.show{display:block}.firebase-back{background:#e9ece8!important;color:#20231f!important}
+.pending-badge{display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:#dc2626;color:#fff;font-size:10px;margin-left:4px}
+.access-list{display:grid;gap:8px}.access-card{border:1px solid #dbe2ea;border-radius:10px;padding:10px;background:#fff}.access-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.access-name{font-weight:700;font-size:14px}.access-meta{font-size:11px;color:#667085;margin-top:3px;line-height:1.45}.access-actions{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}.access-actions button{padding:7px 9px;font-size:11px}
+.firebase-login-overlay{position:fixed;inset:0;background:rgba(18,20,18,.96);z-index:99999;display:flex;align-items:center;justify-content:center;padding:18px}.firebase-login-card{width:min(430px,100%);background:#fff;border-radius:16px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.4)}.firebase-login-card h2{margin:0 0 6px}.firebase-login-card p{font-size:13px;color:#555}.firebase-login-card input{width:100%;box-sizing:border-box;padding:12px;border:1px solid #bbb;border-radius:9px;margin:7px 0}.firebase-login-card button{width:100%;padding:12px;border:0;border-radius:9px;background:#2f332d;color:#fff;font-weight:700;margin-top:8px}.firebase-login-card .secondary-login{background:#e9ece8;color:#20231f}.firebase-login-status{margin-top:10px;font-size:12px;min-height:18px}.firebase-user-badge{position:fixed;top:8px;right:8px;z-index:99998;background:#2f332d;color:#fff;padding:7px 10px;border-radius:999px;font-size:11px;display:none}.firebase-logout{position:fixed;top:8px;right:8px;z-index:99998;margin-right:0;transform:translateY(36px);display:none;border:0;border-radius:8px;padding:6px 9px;background:#eee;color:#222;font-size:11px}.firebase-auth-hidden{display:none!important}.firebase-register-fields{display:none}.firebase-register-fields.show{display:block}.firebase-back{background:#e9ece8!important;color:#20231f!important}.password-wrap{position:relative}.password-wrap input{padding-right:48px}.password-toggle{position:absolute!important;right:4px;top:3px;width:40px!important;height:40px;padding:0!important;margin:0!important;background:transparent!important;color:#555!important;font-size:18px!important}.firebase-migrate{position:fixed;right:8px;top:8px;z-index:99998;display:none;background:#17365d;color:#fff;border:0;border-radius:8px;padding:7px 10px;font-size:11px;font-weight:700}.firebase-migrate.show{display:block;transform:translateY(72px)}
 </style>
 <div id="firebaseLoginOverlay" class="firebase-login-overlay">
   <div class="firebase-login-card">
@@ -59,7 +63,7 @@
     <p id="firebaseAuthIntro"><b>Acesso online</b><br>Entre com seu e-mail e senha.</p>
     <div id="firebaseLoginFields">
       <input id="firebaseEmail" type="email" autocomplete="email" placeholder="E-mail">
-      <input id="firebasePassword" type="password" autocomplete="current-password" placeholder="Senha">
+      <div class="password-wrap"><input id="firebasePassword" type="password" autocomplete="current-password" placeholder="Senha"><button type="button" class="password-toggle" aria-label="Mostrar senha" onclick="togglePassword('firebasePassword',this)">👁️</button></div>
       <button id="firebaseLoginBtn" type="button" onclick="firebaseLogin()">Entrar</button>
       <button type="button" class="secondary-login" onclick="showFirebaseRegister()">Criar cadastro</button>
       <button type="button" class="secondary-login" onclick="firebaseResetPassword()">Esqueci minha senha</button>
@@ -69,8 +73,8 @@
       <input id="firebaseRegEmail" type="email" autocomplete="email" placeholder="E-mail">
       <input id="firebaseRegPhone" type="tel" autocomplete="tel" placeholder="Telefone">
       <input id="firebaseRegCrtr" type="text" placeholder="CRTR">
-      <input id="firebaseRegPassword" type="password" autocomplete="new-password" placeholder="Senha">
-      <input id="firebaseRegPassword2" type="password" autocomplete="new-password" placeholder="Confirmar senha">
+      <div class="password-wrap"><input id="firebaseRegPassword" type="password" autocomplete="new-password" placeholder="Senha"><button type="button" class="password-toggle" aria-label="Mostrar senha" onclick="togglePassword('firebaseRegPassword',this)">👁️</button></div>
+      <div class="password-wrap"><input id="firebaseRegPassword2" type="password" autocomplete="new-password" placeholder="Confirmar senha"><button type="button" class="password-toggle" aria-label="Mostrar senha" onclick="togglePassword('firebaseRegPassword2',this)">👁️</button></div>
       <button type="button" onclick="firebaseRegister()">Cadastrar</button>
       <button type="button" class="firebase-back" onclick="showFirebaseLogin()">Voltar para entrar</button>
     </div>
@@ -79,37 +83,58 @@
 </div>
 <div id="firebaseUserBadge" class="firebase-user-badge"></div>
 <button id="firebaseLogout" class="firebase-logout" type="button" onclick="firebaseLogout()">Sair</button>
+<button id="firebaseMigrateBtn" class="firebase-migrate" type="button" onclick="migrateLocalDbToFirestore()">☁️ Enviar base ao Firebase</button>
 <script>
-const firebaseConfig={
-  apiKey:"AIzaSyBQc6LDc2LxMhQ-Fu2UwPwJbo7u4YXztcw",
-  authDomain:"frequencia-de-estagiarios.firebaseapp.com",
-  projectId:"frequencia-de-estagiarios",
-  storageBucket:"frequencia-de-estagiarios.firebasestorage.app",
-  messagingSenderId:"780642152439",
-  appId:"1:780642152439:web:56201a93b9d9ddfbb1c8f2"
-};
+const firebaseConfig={apiKey:"AIzaSyBQc6LDc2LxMhQ-Fu2UwPwJbo7u4YXztcw",authDomain:"frequencia-de-estagiarios.firebaseapp.com",projectId:"frequencia-de-estagiarios",storageBucket:"frequencia-de-estagiarios.firebasestorage.app",messagingSenderId:"780642152439",appId:"1:780642152439:web:56201a93b9d9ddfbb1c8f2"};
 if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
 const firebaseAuth=firebase.auth();
 const firebaseDb=firebase.firestore();
 let firebaseCurrentUser=null;
 let firebaseProfile=null;
+let firebaseOnlineReady=false;
 function setFirebaseStatus(msg,error=false){const el=document.getElementById('firebaseLoginStatus');if(el){el.textContent=msg;el.style.color=error?'#b42318':'#333';}}
+function togglePassword(id,btn){const el=document.getElementById(id);if(!el)return;const show=el.type==='password';el.type=show?'text':'password';btn.textContent=show?'🙈':'👁️';btn.setAttribute('aria-label',show?'Ocultar senha':'Mostrar senha');}
 function showFirebaseRegister(){document.getElementById('firebaseLoginFields').style.display='none';document.getElementById('firebaseRegisterFields').classList.add('show');document.getElementById('firebaseAuthIntro').innerHTML='<b>Novo cadastro</b><br>Preencha seus dados. O administrador deverá aprovar seu acesso.';setFirebaseStatus('');}
 function showFirebaseLogin(){document.getElementById('firebaseLoginFields').style.display='block';document.getElementById('firebaseRegisterFields').classList.remove('show');document.getElementById('firebaseAuthIntro').innerHTML='<b>Acesso online</b><br>Entre com seu e-mail e senha.';setFirebaseStatus('');}
+async function ensureFirestoreOnline(){try{await firebaseDb.enableNetwork();firebaseOnlineReady=true;return true}catch(e){firebaseOnlineReady=false;throw e}}
 async function firebaseRegister(){
   const name=document.getElementById('firebaseRegName').value.trim(),email=document.getElementById('firebaseRegEmail').value.trim().toLowerCase(),phone=document.getElementById('firebaseRegPhone').value.trim(),crtr=document.getElementById('firebaseRegCrtr').value.trim(),pass=document.getElementById('firebaseRegPassword').value,pass2=document.getElementById('firebaseRegPassword2').value;
   if(!name||!email||!phone||!crtr||!pass)return setFirebaseStatus('Preencha todos os campos.',true);
   if(pass.length<6)return setFirebaseStatus('A senha deve ter pelo menos 6 caracteres.',true);
   if(pass!==pass2)return setFirebaseStatus('As senhas não conferem.',true);
   try{
-    setFirebaseStatus('Criando seu cadastro...');
+    await ensureFirestoreOnline();setFirebaseStatus('Criando seu cadastro...');
     const cred=await firebaseAuth.createUserWithEmailAndPassword(email,pass);
     await firebaseDb.collection('users').doc(cred.user.uid).set({name,email,phone,crtr,role:'professional',status:'pending',createdAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
-    firebaseCurrentUser=cred.user;firebaseProfile={name,email,phone,crtr,role:'professional',status:'pending'};
-    await firebaseAuth.signOut();firebaseCurrentUser=null;
-    showFirebaseLogin();
-    document.getElementById('firebaseEmail').value=email;setFirebaseStatus('Cadastro realizado. Aguarde a aprovação do administrador para acessar o sistema.');
-  }catch(e){setFirebaseStatus('Não foi possível criar o cadastro: '+(e?.message||'erro desconhecido'),true);}
+    await firebaseAuth.signOut();firebaseCurrentUser=null;showFirebaseLogin();document.getElementById('firebaseEmail').value=email;setFirebaseStatus('Cadastro realizado. Aguarde a aprovação do administrador para acessar o sistema.');
+  }catch(e){setFirebaseStatus('Não foi possível criar o cadastro: '+(e?.code==='failed-precondition'?'o Firestore não está disponível neste momento.':(e?.message||'erro desconhecido')),true);}
+}
+async function loadAccessRequests(){
+  if(!firebaseCurrentUser || firebaseProfile?.role!=='admin') return;
+  const list=document.getElementById('accessList');
+  if(list) list.innerHTML='<div class="notice">Consultando solicitações no Firebase...</div>';
+  try{
+    await ensureFirestoreOnline();
+    const snap=await firebaseDb.collection('users').get({source:'server'});
+    const users=snap.docs.map(d=>({id:d.id,...d.data()}));
+    const pending=users.filter(u=>u.status==='pending');
+    const admins=users.filter(u=>u.role==='admin' && u.status==='approved');
+    const badge=document.getElementById('pendingBadge'); if(badge){badge.textContent=pending.length;badge.style.display=pending.length?'inline-flex':'none';}
+    const sum=document.getElementById('accessSummary'); if(sum)sum.textContent=pending.length+' pendente'+(pending.length===1?'':'s');
+    if(list) list.innerHTML=pending.length?pending.sort((a,b)=>(a.name||a.email||'').localeCompare(b.name||b.email||'','pt-BR')).map(u=>`<div class="access-card"><div class="access-head"><div><div class="access-name">${esc(u.name||'Sem nome')}</div><div class="access-meta">E-mail: ${esc(u.email||'')}<br>CRTR: ${esc(u.crtr||'Não informado')}<br>Telefone: ${esc(u.phone||'Não informado')}</div></div><span class="badge">PENDENTE</span></div><div class="access-actions"><button class="success" onclick="approveUser('${u.id}')">✓ Aprovar</button><button class="danger" onclick="blockUser('${u.id}')">Bloquear</button></div></div>`).join(''):'<div class="notice">Nenhuma solicitação pendente.</div>';
+    const al=document.getElementById('adminList'); if(al) al.innerHTML=admins.length?admins.sort((a,b)=>(a.name||a.email||'').localeCompare(b.name||b.email||'','pt-BR')).map(u=>`<div class="access-card"><div class="access-name">${esc(u.name||'Administrador')}</div><div class="access-meta">${esc(u.email||'')} • ${esc(u.crtr||'Administrador')}</div></div>`).join(''):'<div class="notice">Nenhum administrador aprovado encontrado.</div>';
+  }catch(e){if(list)list.innerHTML='<div class="notice" style="background:#fee2e2;color:#991b1b">Não foi possível consultar os cadastros: '+esc(e?.message||'erro desconhecido')+'</div>';}
+}
+async function approveUser(uid){
+  if(!firebaseCurrentUser||firebaseProfile?.role!=='admin')return alert('Somente administrador pode aprovar cadastros.');
+  try{await ensureFirestoreOnline();await firebaseDb.collection('users').doc(uid).update({status:'approved'});await loadAccessRequests();alert('Cadastro aprovado. O profissional já pode entrar com o e-mail e a senha cadastrados.');}
+  catch(e){alert('Não foi possível aprovar: '+(e?.message||'erro desconhecido'));}
+}
+async function blockUser(uid){
+  if(!firebaseCurrentUser||firebaseProfile?.role!=='admin')return alert('Somente administrador pode bloquear cadastros.');
+  if(!confirm('Bloquear este cadastro? O profissional não poderá acessar o sistema.'))return;
+  try{await ensureFirestoreOnline();await firebaseDb.collection('users').doc(uid).update({status:'blocked'});await loadAccessRequests();}
+  catch(e){alert('Não foi possível bloquear: '+(e?.message||'erro desconhecido'));}
 }
 async function firebaseLogin(){
   const email=document.getElementById('firebaseEmail').value.trim().toLowerCase(),pass=document.getElementById('firebasePassword').value;
@@ -117,105 +142,53 @@ async function firebaseLogin(){
   try{
     setFirebaseStatus('Entrando...');
     const cred=await firebaseAuth.signInWithEmailAndPassword(email,pass);firebaseCurrentUser=cred.user;
-    const snap=await firebaseDb.collection('users').doc(cred.user.uid).get();
+    await ensureFirestoreOnline();
+    const snap=await firebaseDb.collection('users').doc(cred.user.uid).get({source:'server'});
     firebaseProfile=snap.exists?snap.data():null;
     const adminEmail=(db?.config?.adminEmail||'').trim().toLowerCase();
-    const isAdmin=!!adminEmail && email===adminEmail;
+    const isAdmin=!!adminEmail&&email===adminEmail;
     if(!firebaseProfile){
       if(isAdmin){firebaseProfile={name:'Administrador',email,role:'admin',status:'approved'};await firebaseDb.collection('users').doc(cred.user.uid).set(firebaseProfile,{merge:true});}
-      else {await firebaseAuth.signOut();firebaseCurrentUser=null;return setFirebaseStatus('Seu cadastro ainda não está vinculado ao sistema. Aguarde o administrador.',true);}
+      else{await firebaseAuth.signOut();firebaseCurrentUser=null;return setFirebaseStatus('Seu cadastro ainda não está vinculado ao sistema. Aguarde o administrador.',true);}
     }
     if(firebaseProfile.status==='blocked'){await firebaseAuth.signOut();firebaseCurrentUser=null;return setFirebaseStatus('Seu acesso está bloqueado. Procure o administrador.',true);}
-    if(firebaseProfile.status!=='approved' && !isAdmin){await firebaseAuth.signOut();firebaseCurrentUser=null;return setFirebaseStatus('Cadastro encontrado, mas ainda aguarda aprovação do administrador.',true);}
+    if(firebaseProfile.status!=='approved'&&!isAdmin){await firebaseAuth.signOut();firebaseCurrentUser=null;return setFirebaseStatus('Cadastro encontrado, mas ainda aguarda aprovação do administrador.',true);}
     firebaseProfile.role=isAdmin?'admin':(firebaseProfile.role||'professional');
     localStorage.setItem('freqFirebaseUid',cred.user.uid);localStorage.setItem('freqFirebaseRole',firebaseProfile.role);localStorage.setItem('freqFirebaseEmail',email);
     document.getElementById('firebaseLoginOverlay').style.display='none';
     const badge=document.getElementById('firebaseUserBadge');badge.textContent=(firebaseProfile.name||email)+' • '+(firebaseProfile.crtr||'Administrador');badge.style.display='block';document.getElementById('firebaseLogout').style.display='block';
+    const mb=document.getElementById('firebaseMigrateBtn');if(mb)mb.classList.toggle('show',firebaseProfile.role==='admin');if(firebaseProfile.role==='admin'){const at=document.getElementById('tabAccess');if(at)at.style.display='';loadAccessRequests();}
     if(document.getElementById('role')){document.getElementById('role').value=firebaseProfile.role==='admin'?'admin':'teacher';renderAll();if(firebaseProfile.role!=='admin'&&document.getElementById('roleUser')){const prof=(db.professionals||[]).find(p=>(p.email||'').toLowerCase()===email||(p.crtr||'').toLowerCase()===(firebaseProfile.crtr||'').toLowerCase());if(prof)document.getElementById('roleUser').value=prof.id;renderAll();}}
-  }catch(e){setFirebaseStatus('E-mail ou senha inválidos, ou não foi possível entrar: '+(e?.message||''),true);}
+  }catch(e){
+    const c=e?.code||'';let msg='Não foi possível entrar.';
+    if(c==='auth/wrong-password'||c==='auth/invalid-credential')msg='E-mail ou senha incorretos.';
+    else if(c==='failed-precondition'||/offline/i.test(e?.message||''))msg='O login foi autenticado, mas o Firestore não respondeu. Verifique a internet e tente novamente.';
+    else if(c==='permission-denied')msg='Login realizado, mas o Firestore recusou o acesso ao cadastro do usuário. Verifique as regras do banco.';
+    else msg+=' '+(e?.message||'');
+    setFirebaseStatus(msg,true);
+  }
 }
-async function firebaseResetPassword(){const email=document.getElementById('firebaseEmail').value.trim().toLowerCase();if(!email)return setFirebaseStatus('Digite seu e-mail primeiro.',true);try{await firebaseAuth.sendPasswordResetEmail(email);setFirebaseStatus('Enviamos as instruções de recuperação para seu e-mail.');}catch(e){setFirebaseStatus('Não foi possível enviar a recuperação: '+(e?.message||''),true);}}
-async function firebaseLogout(){try{await firebaseAuth.signOut();}finally{localStorage.removeItem('freqFirebaseUid');localStorage.removeItem('freqFirebaseRole');localStorage.removeItem('freqFirebaseEmail');location.reload();}}
-function firebaseLockScreen(){
-  firebaseAuth.onAuthStateChanged(async user=>{
-    if(!user){document.getElementById('firebaseLoginOverlay').style.display='flex';return;}
-    try{
-      firebaseCurrentUser=user;const snap=await firebaseDb.collection('users').doc(user.uid).get();firebaseProfile=snap.exists?snap.data():null;
-      const email=(user.email||'').toLowerCase(),adminEmail=(db?.config?.adminEmail||'').trim().toLowerCase(),isAdmin=!!adminEmail&&email===adminEmail;
-      if(!firebaseProfile&&!isAdmin){await firebaseAuth.signOut();return;}
-      if(firebaseProfile?.status==='blocked'){await firebaseAuth.signOut();return;}
-      if(!isAdmin&&firebaseProfile?.status!=='approved'){await firebaseAuth.signOut();document.getElementById('firebaseLoginOverlay').style.display='flex';setFirebaseStatus('Cadastro aguardando aprovação do administrador.');return;}
-      if(isAdmin)firebaseProfile={...(firebaseProfile||{}),role:'admin',status:'approved',email};
-      document.getElementById('firebaseLoginOverlay').style.display='none';const badge=document.getElementById('firebaseUserBadge');badge.textContent=(firebaseProfile?.name||email)+' • '+(firebaseProfile?.crtr||'Administrador');badge.style.display='block';document.getElementById('firebaseLogout').style.display='block';
-    }catch(e){await firebaseAuth.signOut();}
-  });
-}
-</script>
-<script>
-const shifts=[{id:'m',name:'MAT',label:'MAT — 08:00 às 12:00',hours:'08:00 às 12:00'},{id:'t',name:'VES',label:'VES — 14:00 às 18:00',hours:'14:00 às 18:00'},{id:'n',name:'NOT',label:'NOT — 19:00 às 23:00',hours:'19:00 às 23:00'}];
-const EMBEDDED_DB={"acceptances":[],"config":{"institution":"ICB – Instituto de Conhecimento da Bahia","institutionEmail":"","adminEmail":"","valuePerMonth":100,"startDate":"","endDate":""},"locations":[{"id":"loc1","name":"UPA IRC"},{"id":"loc2","name":"Hospital Municipal"},{"id":"loc3","name":"Hospital Municipal de Lapão"},{"id":"loc4","name":"Hospital Municipal de Canarana"},{"id":"be771ed1-5e94-43aa-a39d-8a790b202ffc","name":"CEOM"}],"professionals":[{"id":"p1","name":"Diego Ferreira Alves Barreto","crtr":"2579T","phone":"+55 74 9955-7290","email":"","paymentType":"Pix","pix":""},{"id":"p2","name":"Diogo Novaes Andrade","crtr":"04184T","phone":"+55 74 9973-8781","email":"","paymentType":"Pix","pix":""},{"id":"p3","name":"Enésio Fernandes de Souza","crtr":"05995T","phone":"+55 74 9977-7860","email":"","paymentType":"Pix","pix":""},{"id":"p4","name":"Jairo Rodrigues de Sá","crtr":"04605T","phone":"","email":"","paymentType":"Pix","pix":""},{"id":"p5","name":"Leonardo Amaral São Pedro","crtr":"06935T","phone":"+55 74 9955-7290","email":"","paymentType":"Pix","pix":""},{"id":"p6","name":"Marcelo da Cunha Araújo","crtr":"06212T","phone":"+55 74 9967-4085","email":"","paymentType":"Pix","pix":""},{"id":"a6b0e344-0aeb-409f-8264-1cec1c57ecd9","name":"Mário da Conceição","crtr":"04878N","phone":"74 99806 4814","email":"","paymentType":"Pix","pix":"74998064814"}],"students":[{"id":"s1","name":"Adenailson Alves Miguel Barreto Junior","className":"C","locationId":"loc1","shift":"t"},{"id":"s2","name":"Ana Paula Silva de Jesus","className":"C","locationId":"loc2","shift":"t"},{"id":"s3","name":"Andresa Rocha Menezes","className":"C","locationId":"loc2","shift":"t"},{"id":"s4","name":"Bárbara Laise da Silva","className":"B","locationId":"loc1","shift":"m"},{"id":"s5","name":"Brenda Pereira da Silva","className":"C","locationId":"loc3","shift":"m"},{"id":"s6","name":"Bruna Renata Lins Costa","className":"B","locationId":"loc1","shift":"m"},{"id":"s7","name":"Daiane da Silva Santos","className":"B","locationId":"loc2","shift":"t"},{"id":"s8","name":"Ediones Ferreira dos Santos","className":"B","locationId":"loc1","shift":"t"},{"id":"s9","name":"Emily Roza Nunes Santos","className":"B","locationId":"loc1","shift":"n"},{"id":"s10","name":"Francisca Kaliny Oliveira de Andrade","className":"C","locationId":"loc1","shift":"m"},{"id":"s11","name":"Gilvanda Ferreira Brazão","className":"D","locationId":"loc1","shift":"t"},{"id":"s12","name":"Iara dos Santos Souza","className":"B","locationId":"","shift":""},{"id":"s13","name":"Ildeli Bessa de Souza","className":"A","locationId":"loc1","shift":"t"},{"id":"s14","name":"Isailde de Oliveira Souza","className":"C","locationId":"loc4","shift":"m"},{"id":"s15","name":"Laiane Gomes da Conceição Bezerra","className":"D","locationId":"","shift":""},{"id":"s16","name":"Lisandra de Moura Alecrim","className":"C","locationId":"loc4","shift":"m"},{"id":"s17","name":"Luana Lins Costa","className":"B","locationId":"loc1","shift":"m"},{"id":"s18","name":"Luciene Pereira de Andrade Oliveira","className":"C","locationId":"loc2","shift":"t"},{"id":"s19","name":"Maiara Rosa de Souza","className":"B","locationId":"loc4","shift":"m"},{"id":"s20","name":"Mikael Costa Brandão da Silva","className":"B","locationId":"loc3","shift":"m"},{"id":"s21","name":"Noelma Leandro Nascimento","className":"C","locationId":"loc4","shift":"m"},{"id":"s22","name":"Patrícia Maria Jesus","className":"D","locationId":"loc3","shift":"m"},{"id":"s23","name":"Pedro Henrique S. de Souza","className":"","locationId":"be771ed1-5e94-43aa-a39d-8a790b202ffc","shift":"m"},{"id":"s24","name":"Tainá Pessoa dos Santos","className":"C","locationId":"loc1","shift":"n"},{"id":"s25","name":"Thaís Quelle Muniz de Almeida","className":"","locationId":"","shift":""},{"id":"s26","name":"Ticiana Amorim Reis Leite","className":"C","locationId":"loc1","shift":"m"},{"id":"s27","name":"Yasmin Rocha Bastos","className":"C","locationId":"loc2","shift":"t"},{"id":"s28","name":"Zélia Laiane Barreto Matos","className":"","locationId":"be771ed1-5e94-43aa-a39d-8a790b202ffc","shift":"m"}],"allocations":[{"id":"a_s1_loc1_t","studentId":"s1","locationId":"loc1","shift":"t"},{"id":"a_s2_loc2_t","studentId":"s2","locationId":"loc2","shift":"t"},{"id":"a_s3_loc2_t","studentId":"s3","locationId":"loc2","shift":"t"},{"id":"a_s4_loc1_m","studentId":"s4","locationId":"loc1","shift":"m"},{"id":"a_s5_loc3_m","studentId":"s5","locationId":"loc3","shift":"m"},{"id":"a_s6_loc1_m","studentId":"s6","locationId":"loc1","shift":"m"},{"id":"a_s7_loc2_t","studentId":"s7","locationId":"loc2","shift":"t"},{"id":"a_s8_loc1_t","studentId":"s8","locationId":"loc1","shift":"t"},{"id":"a_s9_loc1_n","studentId":"s9","locationId":"loc1","shift":"n"},{"id":"a_s10_loc1_m","studentId":"s10","locationId":"loc1","shift":"m"},{"id":"a_s11_loc1_t","studentId":"s11","locationId":"loc1","shift":"t"},{"id":"a_s13_loc1_t","studentId":"s13","locationId":"loc1","shift":"t"},{"id":"a_s14_loc4_m","studentId":"s14","locationId":"loc4","shift":"m"},{"id":"a_s16_loc4_m","studentId":"s16","locationId":"loc4","shift":"m"},{"id":"a_s17_loc1_m","studentId":"s17","locationId":"loc1","shift":"m"},{"id":"a_s18_loc2_t","studentId":"s18","locationId":"loc2","shift":"t"},{"id":"a_s19_loc4_m","studentId":"s19","locationId":"loc4","shift":"m"},{"id":"a_s20_loc3_m","studentId":"s20","locationId":"loc3","shift":"m"},{"id":"a_s21_loc4_m","studentId":"s21","locationId":"loc4","shift":"m"},{"id":"a_s22_loc3_m","studentId":"s22","locationId":"loc3","shift":"m"},{"id":"a_s23_be771ed1-5e94-43aa-a39d-8a790b202ffc_m","studentId":"s23","locationId":"be771ed1-5e94-43aa-a39d-8a790b202ffc","shift":"m"},{"id":"a_s24_loc1_n","studentId":"s24","locationId":"loc1","shift":"n"},{"id":"a_s26_loc1_m","studentId":"s26","locationId":"loc1","shift":"m"},{"id":"a_s27_loc2_t","studentId":"s27","locationId":"loc2","shift":"t"},{"id":"a_s28_be771ed1-5e94-43aa-a39d-8a790b202ffc_m","studentId":"s28","locationId":"be771ed1-5e94-43aa-a39d-8a790b202ffc","shift":"m"}],"entries":[]};
-const defaultLocations=EMBEDDED_DB.locations.map(x=>({...x,monthlyValue:Number(x.monthlyValue??(x.name==='Hospital Municipal'?150:100)),dailyValue:Number(x.dailyValue??(x.name==='Hospital Municipal'?7.5:25)),hoursPerShift:Number(x.hoursPerShift??4),weeklyHours:Number(x.weeklyHours??20),daysPerMonth:Number(x.daysPerMonth??(x.name==='Hospital Municipal'?20:4))}));
-const defaultStudents=EMBEDDED_DB.students.map(x=>[x.name,x.className]);
-const defaultProfs=EMBEDDED_DB.professionals.map(x=>[x.name,x.crtr,x.phone||'']);
-// Firebase 8.3: autenticação por e-mail e senha. A versão 8.2 permanece intacta como base.
-const firebaseConfig={
-  apiKey:"AIzaSyBQc6LDc2LxMhQ-Fu2UwPwJbo7u4YXztcw",
-  authDomain:"frequencia-de-estagiarios.firebaseapp.com",
-  projectId:"frequencia-de-estagiarios",
-  storageBucket:"frequencia-de-estagiarios.firebasestorage.app",
-  messagingSenderId:"780642152439",
-  appId:"1:780642152439:web:56201a93b9d9ddfbb1c8f2"
-};
-if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
-const firebaseAuth=firebase.auth();
-let firebaseConfirmationResult=null;
-let firebaseRecaptcha=null;
-let firebaseCurrentUser=null;
-function normalizePhone(v){return String(v||'').replace(/\D/g,'');}
-function formatPhoneForAuth(v){let d=normalizePhone(v);if(d.startsWith('55'))return '+'+d;if(d.length===11)return '+55'+d;if(d.length===10)return '+55'+d;return '+'+d;}
-function findProfessionalByPhone(phone){const d=normalizePhone(phone);return (db?.professionals||[]).find(p=>{const q=normalizePhone(p.phone);return q===d||q===d.replace(/^55/,'')||('55'+q)===d;})||null;}
-function setFirebaseStatus(msg,error=false){const el=document.getElementById('firebaseLoginStatus');if(el){el.textContent=msg;el.style.color=error?'#b42318':'#333';}}
-function initFirebaseRecaptcha(){if(firebaseRecaptcha)return;firebaseRecaptcha=new firebase.auth.RecaptchaVerifier('firebaseRecaptcha',{size:'invisible',callback:()=>{},'expired-callback':()=>{setFirebaseStatus('A verificação expirou. Tente novamente.',true);}});firebaseRecaptcha.render().catch(()=>{});}
-async function firebaseSendCode(){
+async function firebaseResetPassword(){const email=document.getElementById('firebaseEmail').value.trim().toLowerCase();if(!email)return setFirebaseStatus('Digite seu e-mail primeiro.',true);try{await firebaseAuth.sendPasswordResetEmail(email);setFirebaseStatus('Enviamos as instruções de recuperação para seu e-mail.')}catch(e){setFirebaseStatus('Não foi possível enviar a recuperação: '+(e?.message||''),true)}}
+async function firebaseLogout(){try{await firebaseAuth.signOut()}finally{localStorage.removeItem('freqFirebaseUid');localStorage.removeItem('freqFirebaseRole');localStorage.removeItem('freqFirebaseEmail');location.reload()}}
+function firebaseLockScreen(){firebaseAuth.onAuthStateChanged(async user=>{if(!user){document.getElementById('firebaseLoginOverlay').style.display='flex';return}try{await ensureFirestoreOnline();const snap=await firebaseDb.collection('users').doc(user.uid).get({source:'server'});firebaseProfile=snap.exists?snap.data():null;if(!firebaseProfile){await firebaseAuth.signOut();return setFirebaseStatus('Sua conta existe no Firebase Authentication, mas ainda não possui cadastro no sistema.',true)}if(firebaseProfile.status==='blocked'){await firebaseAuth.signOut();return setFirebaseStatus('Seu acesso está bloqueado. Procure o administrador.',true)}if(firebaseProfile.status!=='approved'){await firebaseAuth.signOut();return setFirebaseStatus('Cadastro aguardando aprovação do administrador.',true)}firebaseCurrentUser=user;document.getElementById('firebaseLoginOverlay').style.display='none';document.getElementById('firebaseUserBadge').textContent=(firebaseProfile.name||user.email)+' • '+(firebaseProfile.crtr||'');document.getElementById('firebaseUserBadge').style.display='block';document.getElementById('firebaseLogout').style.display='block';const mb=document.getElementById('firebaseMigrateBtn');if(mb)mb.classList.toggle('show',firebaseProfile.role==='admin');if(document.getElementById('role')){document.getElementById('role').value=firebaseProfile.role==='admin'?'admin':'teacher';renderAll();}}catch(e){setFirebaseStatus('Conta autenticada, mas não foi possível consultar o Firestore agora. '+(e?.message||''),true)}})}
+async function migrateLocalDbToFirestore(){
+  if(!firebaseCurrentUser||firebaseProfile?.role!=='admin')return alert('Somente administrador pode enviar a base para o Firebase.');
+  const counts={locations:db.locations?.length||0,professionals:db.professionals?.length||0,students:db.students?.length||0,allocations:db.allocations?.length||0,entries:db.entries?.length||0,acceptances:db.acceptances?.length||0};
+  const total=Object.values(counts).reduce((a,b)=>a+b,0)+1;
+  if(!confirm('Será enviada para o Firestore a base atualmente salva neste aparelho:\n\n'+Object.entries(counts).map(([k,v])=>k+': '+v).join('\n')+'\n\nTotal aproximado: '+total+' documentos.\n\nA versão local NÃO será apagada. Continuar?'))return;
   try{
-    const phone=formatPhoneForAuth(document.getElementById('firebasePhone').value);
-    if(phone.length<12)return setFirebaseStatus('Informe um número de celular válido com DDD.',true);
-    initFirebaseRecaptcha();
-    setFirebaseStatus('Enviando o código SMS...');
-    firebaseConfirmationResult=await firebaseAuth.signInWithPhoneNumber(phone,firebaseRecaptcha);
-    document.getElementById('firebaseCode').classList.remove('firebase-auth-hidden');
-    document.getElementById('firebaseConfirmCode').classList.remove('firebase-auth-hidden');
-    document.getElementById('firebaseSendCode').disabled=true;
-    setFirebaseStatus('Código enviado. Digite o código recebido por SMS.');
-  }catch(e){setFirebaseStatus('Não foi possível enviar o SMS: '+(e?.message||'erro desconhecido'),true);}
-}
-async function firebaseConfirmCode(){
-  try{
-    const code=document.getElementById('firebaseCode').value.trim();
-    if(!code)return setFirebaseStatus('Digite o código recebido por SMS.',true);
-    if(!firebaseConfirmationResult)return setFirebaseStatus('Solicite primeiro o código por SMS.',true);
-    setFirebaseStatus('Confirmando...');
-    const result=await firebaseConfirmationResult.confirm(code);
-    firebaseCurrentUser=result.user;
-    const prof=findProfessionalByPhone(firebaseCurrentUser.phoneNumber||document.getElementById('firebasePhone').value);
-    if(!prof){await firebaseAuth.signOut();firebaseCurrentUser=null;return setFirebaseStatus('Telefone confirmado, mas não está cadastrado em Profissionais. Peça ao administrador para cadastrar esse número.',true);}
-    localStorage.setItem('freqFirebaseUid',firebaseCurrentUser.uid);
-    localStorage.setItem('freqFirebaseProfId',prof.id);
-    document.getElementById('firebaseLoginOverlay').style.display='none';
-    const badge=document.getElementById('firebaseUserBadge');badge.textContent=prof.name+' • '+prof.crtr;badge.style.display='block';
-    document.getElementById('firebaseLogout').style.display='block';
-    if(document.getElementById('role')){document.getElementById('role').value='teacher';renderAll();if(document.getElementById('roleUser'))document.getElementById('roleUser').value=prof.id;renderAll();}
-  }catch(e){setFirebaseStatus('Código inválido ou expirado. '+(e?.message||''),true);}
-}
-async function firebaseLogout(){try{await firebaseAuth.signOut();}finally{localStorage.removeItem('freqFirebaseUid');localStorage.removeItem('freqFirebaseProfId');location.reload();}}
-function firebaseLockScreen(){
-  firebaseAuth.onAuthStateChanged(user=>{
-    if(user){
-      const prof=findProfessionalByPhone(user.phoneNumber||'');
-      if(prof){firebaseCurrentUser=user;document.getElementById('firebaseLoginOverlay').style.display='none';document.getElementById('firebaseUserBadge').textContent=prof.name+' • '+prof.crtr;document.getElementById('firebaseUserBadge').style.display='block';document.getElementById('firebaseLogout').style.display='block';if(document.getElementById('role')){document.getElementById('role').value='teacher';renderAll();document.getElementById('roleUser').value=prof.id;renderAll();}}
-      else firebaseAuth.signOut();
-    }else{document.getElementById('firebaseLoginOverlay').style.display='flex';}
-  });
+    await ensureFirestoreOnline();
+    setFirebaseStatus('');
+    const collections={locations:db.locations||[],professionals:db.professionals||[],students:db.students||[],allocations:db.allocations||[],entries:db.entries||[],acceptances:db.acceptances||[]};
+    const keys=Object.keys(collections);let batch=firebaseDb.batch(),n=0;
+    const commit=async()=>{if(n){await batch.commit();batch=firebaseDb.batch();n=0}};
+    const put=(collection,item,id)=>{const ref=firebaseDb.collection(collection).doc(String(id));batch.set(ref,JSON.parse(JSON.stringify(item)),{merge:true});n++};
+    put('system',{institution:db.config||{},updatedAt:firebase.firestore.FieldValue.serverTimestamp(),updatedBy:firebaseCurrentUser.uid},'config');
+    for(const c of keys){for(const item of collections[c]){if(!item?.id)continue;put(c,item,item.id);if(n>=450)await commit()}}
+    await commit();
+    await firebaseDb.collection('system').doc('migration').set({version:'8.4',migratedAt:firebase.firestore.FieldValue.serverTimestamp(),migratedBy:firebaseCurrentUser.uid,counts},{merge:true});
+    alert('Base enviada para o Firebase com sucesso. Os dados locais deste aparelho foram preservados.');
+  }catch(e){alert('A migração não foi concluída. '+(e?.code==='permission-denied'?'As regras do Firestore ainda não permitem a gravação destas coleções.':(e?.message||'Verifique a conexão.')))}
 }
 
 const STORAGE_KEY='freqEstagiariosV7_4';
@@ -361,7 +334,7 @@ function printReport(){let c=reportContext();if(getRole()==='teacher'&&!getAccep
 function emailReport(){let c=reportContext(),pid=c.pid,p=c.p,to=db.config.institutionEmail||'';if(!p)return alert('Selecione um professor para enviar o relatório individual.');if(getRole()==='teacher'&&!getAcceptance(pid,c.month))return alert('Confirme a ciência e concordância do relatório antes de enviar.');let month=c.month,total=c.entries.reduce((n,e)=>n+entryValue(e),0);let subject=encodeURIComponent(`Relatório de frequência - ${p.name} - ${month}`);let body=encodeURIComponent(`Relatório de frequência\nProfissional: ${p.name}\nCRTR: ${p.crtr||''}\nPeríodo: ${month}\nValor por aluno/mês: ${money(db.config.valuePerMonth)}\nValor por aluno/dia: ${money(dailyRate())}\nTotal contabilizado: ${money(total)}\n\nDeclaro que conferi os lançamentos apresentados no relatório e estou ciente e de acordo com os valores apresentados para recebimento.`);window.location.href=`mailto:${to}?subject=${subject}&body=${body}`}
 function currentTeacher(){let id=$('roleUser').value;return db.professionals.find(p=>p.id===id)||db.professionals[0]}
 function renderTeacher(){let p=currentTeacher();if(!p)return;let month=new Date().toISOString().slice(0,7),es=db.entries.filter(e=>e.profId===p.id&&e.date.startsWith(month)),hours=es.reduce((n,e)=>n+shiftHours(e.locationId),0),total=es.reduce((n,e)=>n+entryValue(e),0);$('tmProf').textContent=p.name;$('tmCrtr').textContent=p.crtr||'-';$('tmHours').textContent=hours+' h';$('tmMoney').textContent=money(total);$('teacherTable').innerHTML=es.slice().sort((a,b)=>b.date.localeCompare(a.date)).map(e=>`<tr><td>${fmtDate(e.date)}</td><td>${esc(db.locations.find(l=>l.id===e.locationId)?.name||'')}</td><td>${esc(shifts.find(s=>s.id===e.shift)?.label||'')}</td><td>${e.present.length}</td><td>${shiftHours(e.locationId)} h</td><td>${money(entryValue(e))}</td></tr>`).join('')||'<tr><td colspan="6">Nenhum lançamento neste mês.</td></tr>'}
-function applyRoleUI(){let teacher=getRole()==='teacher';['tabDash','tabConfig','tabProf','tabStudents','tabAlloc'].forEach(id=>$(id).style.display=teacher?'none':'');$('tabTeacher').style.display=teacher?'':'none';if(teacher){['dashboard','config','prof','students'].forEach(id=>$(id).classList.remove('active'));$('teacher').classList.add('active');document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));$('tabTeacher').classList.add('active')}else{$('teacher').classList.remove('active')}}
+function applyRoleUI(){let teacher=getRole()==='teacher';['tabDash','tabConfig','tabProf','tabStudents','tabAlloc'].forEach(id=>$(id).style.display=teacher?'none':'');$('tabAccess').style.display=(teacher||firebaseProfile?.role!=='admin')?'none':'';$('tabTeacher').style.display=teacher?'':'none';if(teacher){['dashboard','config','prof','students'].forEach(id=>$(id).classList.remove('active'));$('teacher').classList.add('active');document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));$('tabTeacher').classList.add('active')}else{$('teacher').classList.remove('active')}}
 function renderAll(){loadConfig();renderRole();applyRoleUI();renderTeacher();renderLocations();renderProf();renderStudents();renderAllocationSelectors();renderAllocations();renderSelectors();renderDashboard();if(!$('entryDate').value)$('entryDate').value=new Date().toISOString().slice(0,10);if(!$('reportMonth').value)$('reportMonth').value=new Date().toISOString().slice(0,7);loadSlots();renderReports()}
 $('reportMonth').value=new Date().toISOString().slice(0,7);$('entryDate').value=new Date().toISOString().slice(0,10);renderAll();
 $('valuePerMonth').addEventListener('blur',()=>{$('valuePerMonth').value=parseMoney($('valuePerMonth').value).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2})});
