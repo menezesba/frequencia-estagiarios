@@ -49,30 +49,115 @@
 <section class="report"><div class="report"><h1>PLANÍLHA DE FREQUÊNCIA DE ESTAGIÁRIOS</h1><div class="info"><b>INSTITUIÇÃO:</b> <span id="rInst"></span> &nbsp; <b>LOCAL:</b> <span id="rUnit"></span><br><b>PROFISSIONAL:</b> <span id="rProf"></span> &nbsp; <b>CRTR:</b> <span id="rCrtr"></span><br><b>PERÍODO:</b> <span id="rPeriod"></span> &nbsp; <b>VALOR POR ALUNO/MÊS:</b> <span id="rMonthValue"></span> &nbsp; <b>VALOR POR ALUNO/DIA:</b> <span id="rValue"></span><br><b id="rAcceptance"></b></div><table><thead><tr><th>DATA</th><th>08:00 às 12:00</th><th>14:00 às 18:00</th><th>19:00 às 23:00</th><th>ALUNOS/H</th><th>VALOR DO DIA</th></tr></thead><tbody id="printBody"></tbody></table></div></section>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <style>
-.firebase-login-overlay{position:fixed;inset:0;background:rgba(18,20,18,.96);z-index:99999;display:flex;align-items:center;justify-content:center;padding:18px}.firebase-login-card{width:min(430px,100%);background:#fff;border-radius:16px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.4)}.firebase-login-card h2{margin:0 0 6px}.firebase-login-card p{font-size:13px;color:#555}.firebase-login-card input{width:100%;box-sizing:border-box;padding:12px;border:1px solid #bbb;border-radius:9px;margin:7px 0}.firebase-login-card button{width:100%;padding:12px;border:0;border-radius:9px;background:#2f332d;color:#fff;font-weight:700;margin-top:8px}.firebase-login-card .secondary-login{background:#e9ece8;color:#20231f}.firebase-login-status{margin-top:10px;font-size:12px;min-height:18px}.firebase-user-badge{position:fixed;top:8px;right:8px;z-index:99998;background:#2f332d;color:#fff;padding:7px 10px;border-radius:999px;font-size:11px;display:none}.firebase-logout{position:fixed;top:8px;right:8px;z-index:99998;margin-right:0;transform:translateY(36px);display:none;border:0;border-radius:8px;padding:6px 9px;background:#eee;color:#222;font-size:11px}.firebase-auth-hidden{display:none!important}
+.firebase-login-overlay{position:fixed;inset:0;background:rgba(18,20,18,.96);z-index:99999;display:flex;align-items:center;justify-content:center;padding:18px}.firebase-login-card{width:min(430px,100%);background:#fff;border-radius:16px;padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.4)}.firebase-login-card h2{margin:0 0 6px}.firebase-login-card p{font-size:13px;color:#555}.firebase-login-card input{width:100%;box-sizing:border-box;padding:12px;border:1px solid #bbb;border-radius:9px;margin:7px 0}.firebase-login-card button{width:100%;padding:12px;border:0;border-radius:9px;background:#2f332d;color:#fff;font-weight:700;margin-top:8px}.firebase-login-card .secondary-login{background:#e9ece8;color:#20231f}.firebase-login-status{margin-top:10px;font-size:12px;min-height:18px}.firebase-user-badge{position:fixed;top:8px;right:8px;z-index:99998;background:#2f332d;color:#fff;padding:7px 10px;border-radius:999px;font-size:11px;display:none}.firebase-logout{position:fixed;top:8px;right:8px;z-index:99998;margin-right:0;transform:translateY(36px);display:none;border:0;border-radius:8px;padding:6px 9px;background:#eee;color:#222;font-size:11px}.firebase-auth-hidden{display:none!important}.firebase-auth-title{margin-top:0}.firebase-register-fields{display:none}.firebase-register-fields.show{display:block}.firebase-back{background:#e9ece8!important;color:#20231f!important}
 </style>
 <div id="firebaseLoginOverlay" class="firebase-login-overlay">
   <div class="firebase-login-card">
     <h2>Frequência de Estagiários</h2>
-    <p><b>Acesso online</b><br>Entre com seu número de telefone. O Firebase enviará um código SMS para confirmar sua identidade.</p>
-    <input id="firebasePhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Ex.: (74) 99999-9999">
-    <div id="firebaseRecaptcha"></div>
-    <button id="firebaseSendCode" type="button" onclick="firebaseSendCode()">Enviar código por SMS</button>
-    <input id="firebaseCode" class="firebase-auth-hidden" type="text" inputmode="numeric" autocomplete="one-time-code" placeholder="Código recebido por SMS">
-    <button id="firebaseConfirmCode" class="firebase-auth-hidden" type="button" onclick="firebaseConfirmCode()">Confirmar código</button>
+    <p id="firebaseAuthIntro"><b>Acesso online</b><br>Entre com seu e-mail e senha.</p>
+    <div id="firebaseLoginFields">
+      <input id="firebaseEmail" type="email" autocomplete="email" placeholder="E-mail">
+      <input id="firebasePassword" type="password" autocomplete="current-password" placeholder="Senha">
+      <button id="firebaseLoginBtn" type="button" onclick="firebaseLogin()">Entrar</button>
+      <button type="button" class="secondary-login" onclick="showFirebaseRegister()">Criar cadastro</button>
+      <button type="button" class="secondary-login" onclick="firebaseResetPassword()">Esqueci minha senha</button>
+    </div>
+    <div id="firebaseRegisterFields" class="firebase-register-fields">
+      <input id="firebaseRegName" type="text" autocomplete="name" placeholder="Nome completo">
+      <input id="firebaseRegEmail" type="email" autocomplete="email" placeholder="E-mail">
+      <input id="firebaseRegPhone" type="tel" autocomplete="tel" placeholder="Telefone">
+      <input id="firebaseRegCrtr" type="text" placeholder="CRTR">
+      <input id="firebaseRegPassword" type="password" autocomplete="new-password" placeholder="Senha">
+      <input id="firebaseRegPassword2" type="password" autocomplete="new-password" placeholder="Confirmar senha">
+      <button type="button" onclick="firebaseRegister()">Cadastrar</button>
+      <button type="button" class="firebase-back" onclick="showFirebaseLogin()">Voltar para entrar</button>
+    </div>
     <div id="firebaseLoginStatus" class="firebase-login-status"></div>
   </div>
 </div>
 <div id="firebaseUserBadge" class="firebase-user-badge"></div>
 <button id="firebaseLogout" class="firebase-logout" type="button" onclick="firebaseLogout()">Sair</button>
 <script>
+const firebaseConfig={
+  apiKey:"AIzaSyBQc6LDc2LxMhQ-Fu2UwPwJbo7u4YXztcw",
+  authDomain:"frequencia-de-estagiarios.firebaseapp.com",
+  projectId:"frequencia-de-estagiarios",
+  storageBucket:"frequencia-de-estagiarios.firebasestorage.app",
+  messagingSenderId:"780642152439",
+  appId:"1:780642152439:web:56201a93b9d9ddfbb1c8f2"
+};
+if(!firebase.apps.length)firebase.initializeApp(firebaseConfig);
+const firebaseAuth=firebase.auth();
+const firebaseDb=firebase.firestore();
+let firebaseCurrentUser=null;
+let firebaseProfile=null;
+function setFirebaseStatus(msg,error=false){const el=document.getElementById('firebaseLoginStatus');if(el){el.textContent=msg;el.style.color=error?'#b42318':'#333';}}
+function showFirebaseRegister(){document.getElementById('firebaseLoginFields').style.display='none';document.getElementById('firebaseRegisterFields').classList.add('show');document.getElementById('firebaseAuthIntro').innerHTML='<b>Novo cadastro</b><br>Preencha seus dados. O administrador deverá aprovar seu acesso.';setFirebaseStatus('');}
+function showFirebaseLogin(){document.getElementById('firebaseLoginFields').style.display='block';document.getElementById('firebaseRegisterFields').classList.remove('show');document.getElementById('firebaseAuthIntro').innerHTML='<b>Acesso online</b><br>Entre com seu e-mail e senha.';setFirebaseStatus('');}
+async function firebaseRegister(){
+  const name=document.getElementById('firebaseRegName').value.trim(),email=document.getElementById('firebaseRegEmail').value.trim().toLowerCase(),phone=document.getElementById('firebaseRegPhone').value.trim(),crtr=document.getElementById('firebaseRegCrtr').value.trim(),pass=document.getElementById('firebaseRegPassword').value,pass2=document.getElementById('firebaseRegPassword2').value;
+  if(!name||!email||!phone||!crtr||!pass)return setFirebaseStatus('Preencha todos os campos.',true);
+  if(pass.length<6)return setFirebaseStatus('A senha deve ter pelo menos 6 caracteres.',true);
+  if(pass!==pass2)return setFirebaseStatus('As senhas não conferem.',true);
+  try{
+    setFirebaseStatus('Criando seu cadastro...');
+    const cred=await firebaseAuth.createUserWithEmailAndPassword(email,pass);
+    await firebaseDb.collection('users').doc(cred.user.uid).set({name,email,phone,crtr,role:'professional',status:'pending',createdAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});
+    firebaseCurrentUser=cred.user;firebaseProfile={name,email,phone,crtr,role:'professional',status:'pending'};
+    await firebaseAuth.signOut();firebaseCurrentUser=null;
+    showFirebaseLogin();
+    document.getElementById('firebaseEmail').value=email;setFirebaseStatus('Cadastro realizado. Aguarde a aprovação do administrador para acessar o sistema.');
+  }catch(e){setFirebaseStatus('Não foi possível criar o cadastro: '+(e?.message||'erro desconhecido'),true);}
+}
+async function firebaseLogin(){
+  const email=document.getElementById('firebaseEmail').value.trim().toLowerCase(),pass=document.getElementById('firebasePassword').value;
+  if(!email||!pass)return setFirebaseStatus('Informe e-mail e senha.',true);
+  try{
+    setFirebaseStatus('Entrando...');
+    const cred=await firebaseAuth.signInWithEmailAndPassword(email,pass);firebaseCurrentUser=cred.user;
+    const snap=await firebaseDb.collection('users').doc(cred.user.uid).get();
+    firebaseProfile=snap.exists?snap.data():null;
+    const adminEmail=(db?.config?.adminEmail||'').trim().toLowerCase();
+    const isAdmin=!!adminEmail && email===adminEmail;
+    if(!firebaseProfile){
+      if(isAdmin){firebaseProfile={name:'Administrador',email,role:'admin',status:'approved'};await firebaseDb.collection('users').doc(cred.user.uid).set(firebaseProfile,{merge:true});}
+      else {await firebaseAuth.signOut();firebaseCurrentUser=null;return setFirebaseStatus('Seu cadastro ainda não está vinculado ao sistema. Aguarde o administrador.',true);}
+    }
+    if(firebaseProfile.status==='blocked'){await firebaseAuth.signOut();firebaseCurrentUser=null;return setFirebaseStatus('Seu acesso está bloqueado. Procure o administrador.',true);}
+    if(firebaseProfile.status!=='approved' && !isAdmin){await firebaseAuth.signOut();firebaseCurrentUser=null;return setFirebaseStatus('Cadastro encontrado, mas ainda aguarda aprovação do administrador.',true);}
+    firebaseProfile.role=isAdmin?'admin':(firebaseProfile.role||'professional');
+    localStorage.setItem('freqFirebaseUid',cred.user.uid);localStorage.setItem('freqFirebaseRole',firebaseProfile.role);localStorage.setItem('freqFirebaseEmail',email);
+    document.getElementById('firebaseLoginOverlay').style.display='none';
+    const badge=document.getElementById('firebaseUserBadge');badge.textContent=(firebaseProfile.name||email)+' • '+(firebaseProfile.crtr||'Administrador');badge.style.display='block';document.getElementById('firebaseLogout').style.display='block';
+    if(document.getElementById('role')){document.getElementById('role').value=firebaseProfile.role==='admin'?'admin':'teacher';renderAll();if(firebaseProfile.role!=='admin'&&document.getElementById('roleUser')){const prof=(db.professionals||[]).find(p=>(p.email||'').toLowerCase()===email||(p.crtr||'').toLowerCase()===(firebaseProfile.crtr||'').toLowerCase());if(prof)document.getElementById('roleUser').value=prof.id;renderAll();}}
+  }catch(e){setFirebaseStatus('E-mail ou senha inválidos, ou não foi possível entrar: '+(e?.message||''),true);}
+}
+async function firebaseResetPassword(){const email=document.getElementById('firebaseEmail').value.trim().toLowerCase();if(!email)return setFirebaseStatus('Digite seu e-mail primeiro.',true);try{await firebaseAuth.sendPasswordResetEmail(email);setFirebaseStatus('Enviamos as instruções de recuperação para seu e-mail.');}catch(e){setFirebaseStatus('Não foi possível enviar a recuperação: '+(e?.message||''),true);}}
+async function firebaseLogout(){try{await firebaseAuth.signOut();}finally{localStorage.removeItem('freqFirebaseUid');localStorage.removeItem('freqFirebaseRole');localStorage.removeItem('freqFirebaseEmail');location.reload();}}
+function firebaseLockScreen(){
+  firebaseAuth.onAuthStateChanged(async user=>{
+    if(!user){document.getElementById('firebaseLoginOverlay').style.display='flex';return;}
+    try{
+      firebaseCurrentUser=user;const snap=await firebaseDb.collection('users').doc(user.uid).get();firebaseProfile=snap.exists?snap.data():null;
+      const email=(user.email||'').toLowerCase(),adminEmail=(db?.config?.adminEmail||'').trim().toLowerCase(),isAdmin=!!adminEmail&&email===adminEmail;
+      if(!firebaseProfile&&!isAdmin){await firebaseAuth.signOut();return;}
+      if(firebaseProfile?.status==='blocked'){await firebaseAuth.signOut();return;}
+      if(!isAdmin&&firebaseProfile?.status!=='approved'){await firebaseAuth.signOut();document.getElementById('firebaseLoginOverlay').style.display='flex';setFirebaseStatus('Cadastro aguardando aprovação do administrador.');return;}
+      if(isAdmin)firebaseProfile={...(firebaseProfile||{}),role:'admin',status:'approved',email};
+      document.getElementById('firebaseLoginOverlay').style.display='none';const badge=document.getElementById('firebaseUserBadge');badge.textContent=(firebaseProfile?.name||email)+' • '+(firebaseProfile?.crtr||'Administrador');badge.style.display='block';document.getElementById('firebaseLogout').style.display='block';
+    }catch(e){await firebaseAuth.signOut();}
+  });
+}
+</script>
+<script>
 const shifts=[{id:'m',name:'MAT',label:'MAT — 08:00 às 12:00',hours:'08:00 às 12:00'},{id:'t',name:'VES',label:'VES — 14:00 às 18:00',hours:'14:00 às 18:00'},{id:'n',name:'NOT',label:'NOT — 19:00 às 23:00',hours:'19:00 às 23:00'}];
 const EMBEDDED_DB={"acceptances":[],"config":{"institution":"ICB – Instituto de Conhecimento da Bahia","institutionEmail":"","adminEmail":"","valuePerMonth":100,"startDate":"","endDate":""},"locations":[{"id":"loc1","name":"UPA IRC"},{"id":"loc2","name":"Hospital Municipal"},{"id":"loc3","name":"Hospital Municipal de Lapão"},{"id":"loc4","name":"Hospital Municipal de Canarana"},{"id":"be771ed1-5e94-43aa-a39d-8a790b202ffc","name":"CEOM"}],"professionals":[{"id":"p1","name":"Diego Ferreira Alves Barreto","crtr":"2579T","phone":"+55 74 9955-7290","email":"","paymentType":"Pix","pix":""},{"id":"p2","name":"Diogo Novaes Andrade","crtr":"04184T","phone":"+55 74 9973-8781","email":"","paymentType":"Pix","pix":""},{"id":"p3","name":"Enésio Fernandes de Souza","crtr":"05995T","phone":"+55 74 9977-7860","email":"","paymentType":"Pix","pix":""},{"id":"p4","name":"Jairo Rodrigues de Sá","crtr":"04605T","phone":"","email":"","paymentType":"Pix","pix":""},{"id":"p5","name":"Leonardo Amaral São Pedro","crtr":"06935T","phone":"+55 74 9955-7290","email":"","paymentType":"Pix","pix":""},{"id":"p6","name":"Marcelo da Cunha Araújo","crtr":"06212T","phone":"+55 74 9967-4085","email":"","paymentType":"Pix","pix":""},{"id":"a6b0e344-0aeb-409f-8264-1cec1c57ecd9","name":"Mário da Conceição","crtr":"04878N","phone":"74 99806 4814","email":"","paymentType":"Pix","pix":"74998064814"}],"students":[{"id":"s1","name":"Adenailson Alves Miguel Barreto Junior","className":"C","locationId":"loc1","shift":"t"},{"id":"s2","name":"Ana Paula Silva de Jesus","className":"C","locationId":"loc2","shift":"t"},{"id":"s3","name":"Andresa Rocha Menezes","className":"C","locationId":"loc2","shift":"t"},{"id":"s4","name":"Bárbara Laise da Silva","className":"B","locationId":"loc1","shift":"m"},{"id":"s5","name":"Brenda Pereira da Silva","className":"C","locationId":"loc3","shift":"m"},{"id":"s6","name":"Bruna Renata Lins Costa","className":"B","locationId":"loc1","shift":"m"},{"id":"s7","name":"Daiane da Silva Santos","className":"B","locationId":"loc2","shift":"t"},{"id":"s8","name":"Ediones Ferreira dos Santos","className":"B","locationId":"loc1","shift":"t"},{"id":"s9","name":"Emily Roza Nunes Santos","className":"B","locationId":"loc1","shift":"n"},{"id":"s10","name":"Francisca Kaliny Oliveira de Andrade","className":"C","locationId":"loc1","shift":"m"},{"id":"s11","name":"Gilvanda Ferreira Brazão","className":"D","locationId":"loc1","shift":"t"},{"id":"s12","name":"Iara dos Santos Souza","className":"B","locationId":"","shift":""},{"id":"s13","name":"Ildeli Bessa de Souza","className":"A","locationId":"loc1","shift":"t"},{"id":"s14","name":"Isailde de Oliveira Souza","className":"C","locationId":"loc4","shift":"m"},{"id":"s15","name":"Laiane Gomes da Conceição Bezerra","className":"D","locationId":"","shift":""},{"id":"s16","name":"Lisandra de Moura Alecrim","className":"C","locationId":"loc4","shift":"m"},{"id":"s17","name":"Luana Lins Costa","className":"B","locationId":"loc1","shift":"m"},{"id":"s18","name":"Luciene Pereira de Andrade Oliveira","className":"C","locationId":"loc2","shift":"t"},{"id":"s19","name":"Maiara Rosa de Souza","className":"B","locationId":"loc4","shift":"m"},{"id":"s20","name":"Mikael Costa Brandão da Silva","className":"B","locationId":"loc3","shift":"m"},{"id":"s21","name":"Noelma Leandro Nascimento","className":"C","locationId":"loc4","shift":"m"},{"id":"s22","name":"Patrícia Maria Jesus","className":"D","locationId":"loc3","shift":"m"},{"id":"s23","name":"Pedro Henrique S. de Souza","className":"","locationId":"be771ed1-5e94-43aa-a39d-8a790b202ffc","shift":"m"},{"id":"s24","name":"Tainá Pessoa dos Santos","className":"C","locationId":"loc1","shift":"n"},{"id":"s25","name":"Thaís Quelle Muniz de Almeida","className":"","locationId":"","shift":""},{"id":"s26","name":"Ticiana Amorim Reis Leite","className":"C","locationId":"loc1","shift":"m"},{"id":"s27","name":"Yasmin Rocha Bastos","className":"C","locationId":"loc2","shift":"t"},{"id":"s28","name":"Zélia Laiane Barreto Matos","className":"","locationId":"be771ed1-5e94-43aa-a39d-8a790b202ffc","shift":"m"}],"allocations":[{"id":"a_s1_loc1_t","studentId":"s1","locationId":"loc1","shift":"t"},{"id":"a_s2_loc2_t","studentId":"s2","locationId":"loc2","shift":"t"},{"id":"a_s3_loc2_t","studentId":"s3","locationId":"loc2","shift":"t"},{"id":"a_s4_loc1_m","studentId":"s4","locationId":"loc1","shift":"m"},{"id":"a_s5_loc3_m","studentId":"s5","locationId":"loc3","shift":"m"},{"id":"a_s6_loc1_m","studentId":"s6","locationId":"loc1","shift":"m"},{"id":"a_s7_loc2_t","studentId":"s7","locationId":"loc2","shift":"t"},{"id":"a_s8_loc1_t","studentId":"s8","locationId":"loc1","shift":"t"},{"id":"a_s9_loc1_n","studentId":"s9","locationId":"loc1","shift":"n"},{"id":"a_s10_loc1_m","studentId":"s10","locationId":"loc1","shift":"m"},{"id":"a_s11_loc1_t","studentId":"s11","locationId":"loc1","shift":"t"},{"id":"a_s13_loc1_t","studentId":"s13","locationId":"loc1","shift":"t"},{"id":"a_s14_loc4_m","studentId":"s14","locationId":"loc4","shift":"m"},{"id":"a_s16_loc4_m","studentId":"s16","locationId":"loc4","shift":"m"},{"id":"a_s17_loc1_m","studentId":"s17","locationId":"loc1","shift":"m"},{"id":"a_s18_loc2_t","studentId":"s18","locationId":"loc2","shift":"t"},{"id":"a_s19_loc4_m","studentId":"s19","locationId":"loc4","shift":"m"},{"id":"a_s20_loc3_m","studentId":"s20","locationId":"loc3","shift":"m"},{"id":"a_s21_loc4_m","studentId":"s21","locationId":"loc4","shift":"m"},{"id":"a_s22_loc3_m","studentId":"s22","locationId":"loc3","shift":"m"},{"id":"a_s23_be771ed1-5e94-43aa-a39d-8a790b202ffc_m","studentId":"s23","locationId":"be771ed1-5e94-43aa-a39d-8a790b202ffc","shift":"m"},{"id":"a_s24_loc1_n","studentId":"s24","locationId":"loc1","shift":"n"},{"id":"a_s26_loc1_m","studentId":"s26","locationId":"loc1","shift":"m"},{"id":"a_s27_loc2_t","studentId":"s27","locationId":"loc2","shift":"t"},{"id":"a_s28_be771ed1-5e94-43aa-a39d-8a790b202ffc_m","studentId":"s28","locationId":"be771ed1-5e94-43aa-a39d-8a790b202ffc","shift":"m"}],"entries":[]};
 const defaultLocations=EMBEDDED_DB.locations.map(x=>({...x,monthlyValue:Number(x.monthlyValue??(x.name==='Hospital Municipal'?150:100)),dailyValue:Number(x.dailyValue??(x.name==='Hospital Municipal'?7.5:25)),hoursPerShift:Number(x.hoursPerShift??4),weeklyHours:Number(x.weeklyHours??20),daysPerMonth:Number(x.daysPerMonth??(x.name==='Hospital Municipal'?20:4))}));
 const defaultStudents=EMBEDDED_DB.students.map(x=>[x.name,x.className]);
 const defaultProfs=EMBEDDED_DB.professionals.map(x=>[x.name,x.crtr,x.phone||'']);
-// Firebase 8.3: autenticação por telefone/SMS. A versão 8.2 permanece intacta como base.
+// Firebase 8.3: autenticação por e-mail e senha. A versão 8.2 permanece intacta como base.
 const firebaseConfig={
   apiKey:"AIzaSyBQc6LDc2LxMhQ-Fu2UwPwJbo7u4YXztcw",
   authDomain:"frequencia-de-estagiarios.firebaseapp.com",
