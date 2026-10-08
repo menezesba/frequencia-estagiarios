@@ -104,7 +104,9 @@ const firebaseDb=firebase.firestore();
 let firebaseCurrentUser=null;
 let firebaseProfile=null;
 let firebaseProfileUnsubscribe=null;
+let firebaseRealtimeUnsubscribes=[];
 let firebaseOnlineReady=false;
+let firebaseRealtimeStarting=false;
 let firebaseSecondaryApp=null;
 function setFirebaseStatus(msg,error=false){const el=document.getElementById('firebaseLoginStatus');if(el){el.textContent=msg;el.style.color=error?'#b42318':'#333';}}
 function togglePassword(id,btn){const el=document.getElementById(id);if(!el)return;const show=el.type==='password';el.type=show?'text':'password';btn.textContent=show?'🙈':'👁️';btn.setAttribute('aria-label',show?'Ocultar senha':'Mostrar senha');}
@@ -287,6 +289,59 @@ function watchFirebaseProfile(uid){
     }
   },()=>{});
 }
+function stopFirebaseRealtime(){
+  firebaseRealtimeUnsubscribes.forEach(fn=>{try{fn()}catch(_e){}});
+  firebaseRealtimeUnsubscribes=[];
+  firebaseRealtimeStarting=false;
+}
+function applyRealtimeCollection(collection,snap,filterFn){
+  const arr=[];
+  snap.forEach(doc=>{const d={id:doc.id,...doc.data()};if(!filterFn||filterFn(d))arr.push(d)});
+  if(collection==='entries')db.entries=arr;
+  else if(collection==='allocations')db.allocations=arr;
+  else if(collection==='students')db.students=arr;
+  else if(collection==='locations')db.locations=arr.map(normalizeLocationFinance);
+  else if(collection==='professionals')db.professionals=arr;
+  else if(collection==='acceptances')db.acceptances=arr;
+  syncLegacyStudentFields();
+  save();
+  renderAll();
+}
+function listenRealtimeCollection(collection,query,filterFn){
+  const ref=query||firebaseDb.collection(collection);
+  const unsub=ref.onSnapshot(snap=>applyRealtimeCollection(collection,snap,filterFn),err=>console.warn('Realtime '+collection,err));
+  firebaseRealtimeUnsubscribes.push(unsub);
+}
+function startFirebaseRealtime(){
+  if(!firebaseCurrentUser||!firebaseProfile||firebaseRealtimeStarting)return;
+  stopFirebaseRealtime(); firebaseRealtimeStarting=true;
+  const admin=firebaseProfile.role==='admin';
+  if(admin){
+    listenRealtimeCollection('entries');
+    listenRealtimeCollection('allocations');
+    listenRealtimeCollection('students');
+    listenRealtimeCollection('locations');
+    listenRealtimeCollection('professionals');
+    listenRealtimeCollection('acceptances');
+  }else{
+    const uid=firebaseCurrentUser.uid;
+    listenRealtimeCollection('entries',firebaseDb.collection('entries').where('profUid','==',uid));
+    listenRealtimeCollection('allocations',firebaseDb.collection('allocations').where('profId','==',uid));
+    listenRealtimeCollection('students');
+    listenRealtimeCollection('locations');
+    listenRealtimeCollection('professionals',firebaseDb.collection('professionals').where('uid','==',uid));
+    listenRealtimeCollection('acceptances',firebaseDb.collection('acceptances').where('profId','==',uid));
+  }
+  firebaseRealtimeStarting=false;
+}
+async function firestoreSetIfOnline(collection,id,data){
+  if(!firebaseCurrentUser||!firebaseProfile||firebaseProfile.role!=='admin')return;
+  try{await ensureFirestoreOnline();await firebaseDb.collection(collection).doc(String(id)).set(JSON.parse(JSON.stringify(data)),{merge:true})}catch(e){console.warn('Falha ao sincronizar '+collection,e)}
+}
+async function firestoreDeleteIfOnline(collection,id){
+  if(!firebaseCurrentUser||!firebaseProfile||firebaseProfile.role!=='admin')return;
+  try{await ensureFirestoreOnline();await firebaseDb.collection(collection).doc(String(id)).delete()}catch(e){console.warn('Falha ao remover '+collection,e)}
+}
 function ensureLocalProfessionalProfile(profile,uid){
   if(!profile||profile.role!=='professional')return null;
   const email=(profile.email||firebaseCurrentUser?.email||'').toLowerCase();
@@ -296,8 +351,8 @@ function ensureLocalProfessionalProfile(profile,uid){
   save();return p;
 }
 async function firebaseResetPassword(){const email=document.getElementById('firebaseEmail').value.trim().toLowerCase();if(!email)return setFirebaseStatus('Digite seu e-mail primeiro.',true);try{await firebaseAuth.sendPasswordResetEmail(email);setFirebaseStatus('Enviamos as instruções de recuperação para seu e-mail.')}catch(e){setFirebaseStatus('Não foi possível enviar a recuperação: '+(e?.message||''),true)}}
-async function firebaseLogout(){try{if(firebaseProfileUnsubscribe){firebaseProfileUnsubscribe();firebaseProfileUnsubscribe=null;}await firebaseAuth.signOut()}finally{localStorage.removeItem('freqFirebaseUid');localStorage.removeItem('freqFirebaseRole');localStorage.removeItem('freqFirebaseEmail');location.reload()}}
-function firebaseLockScreen(){firebaseAuth.onAuthStateChanged(async user=>{if(!user){document.getElementById('firebaseLoginOverlay').style.display='flex';return}try{await ensureFirestoreOnline();const snap=await firebaseDb.collection('users').doc(user.uid).get({source:'server'});firebaseProfile=snap.exists?snap.data():null;if(!firebaseProfile){await firebaseAuth.signOut();return setFirebaseStatus('Sua conta existe no Firebase Authentication, mas ainda não possui cadastro no sistema.',true)}if(firebaseProfile.status==='blocked'){await firebaseAuth.signOut();return setFirebaseStatus('Seu acesso está bloqueado. Procure o administrador.',true)}if(firebaseProfile.status!=='approved'){await firebaseAuth.signOut();return setFirebaseStatus('Cadastro aguardando aprovação do administrador.',true)}firebaseCurrentUser=user;watchFirebaseProfile(user.uid);if(firebaseProfile.role==='professional')ensureLocalProfessionalProfile(firebaseProfile,user.uid);document.getElementById('firebaseLoginOverlay').style.display='none';document.getElementById('firebaseUserBadge').textContent=(firebaseProfile.name||user.email)+' • '+(firebaseProfile.crtr||'');document.getElementById('firebaseUserBadge').style.display='block';document.getElementById('firebaseLogout').style.display='block';const am=document.getElementById('adminManagementCard');if(am)am.style.display=firebaseProfile.role==='admin'?'block':'none';const mb=document.getElementById('firebaseMigrateBtn');if(mb)mb.classList.toggle('show',firebaseProfile.role==='admin');if(document.getElementById('role')){document.getElementById('role').value=firebaseProfile.role==='admin'?'admin':'teacher';renderAll();}}catch(e){setFirebaseStatus('Conta autenticada, mas não foi possível consultar o Firestore agora. '+(e?.message||''),true)}})}
+async function firebaseLogout(){try{stopFirebaseRealtime();if(firebaseProfileUnsubscribe){firebaseProfileUnsubscribe();firebaseProfileUnsubscribe=null;}await firebaseAuth.signOut()}finally{localStorage.removeItem('freqFirebaseUid');localStorage.removeItem('freqFirebaseRole');localStorage.removeItem('freqFirebaseEmail');location.reload()}}
+function firebaseLockScreen(){firebaseAuth.onAuthStateChanged(async user=>{if(!user){document.getElementById('firebaseLoginOverlay').style.display='flex';return}try{await ensureFirestoreOnline();const snap=await firebaseDb.collection('users').doc(user.uid).get({source:'server'});firebaseProfile=snap.exists?snap.data():null;if(!firebaseProfile){await firebaseAuth.signOut();return setFirebaseStatus('Sua conta existe no Firebase Authentication, mas ainda não possui cadastro no sistema.',true)}if(firebaseProfile.status==='blocked'){await firebaseAuth.signOut();return setFirebaseStatus('Seu acesso está bloqueado. Procure o administrador.',true)}if(firebaseProfile.status!=='approved'){await firebaseAuth.signOut();return setFirebaseStatus('Cadastro aguardando aprovação do administrador.',true)}firebaseCurrentUser=user;watchFirebaseProfile(user.uid);if(firebaseProfile.role==='professional')ensureLocalProfessionalProfile(firebaseProfile,user.uid);document.getElementById('firebaseLoginOverlay').style.display='none';document.getElementById('firebaseUserBadge').textContent=(firebaseProfile.name||user.email)+' • '+(firebaseProfile.crtr||'');document.getElementById('firebaseUserBadge').style.display='block';document.getElementById('firebaseLogout').style.display='block';const am=document.getElementById('adminManagementCard');if(am)am.style.display=firebaseProfile.role==='admin'?'block':'none';const mb=document.getElementById('firebaseMigrateBtn');if(mb)mb.classList.toggle('show',firebaseProfile.role==='admin');if(document.getElementById('role')){document.getElementById('role').value=firebaseProfile.role==='admin'?'admin':'teacher';renderAll();startFirebaseRealtime();}}catch(e){setFirebaseStatus('Conta autenticada, mas não foi possível consultar o Firestore agora. '+(e?.message||''),true)}})}
 async function migrateLocalDbToFirestore(){
   if(!firebaseCurrentUser||firebaseProfile?.role!=='admin')return alert('Somente administrador pode enviar a base para o Firebase.');
   const counts={locations:db.locations?.length||0,professionals:db.professionals?.length||0,students:db.students?.length||0,allocations:db.allocations?.length||0,entries:db.entries?.length||0,acceptances:db.acceptances?.length||0};
@@ -405,8 +460,8 @@ let sid=$('allocStudent').value,profId=$('allocProf').value,loc=$('allocLocation
 if(!sid||!profId||!loc||!shift)return alert('Selecione aluno, profissional, local e horário.');
 let st=db.students.find(s=>s.id===sid);if(!st)return;
 db.allocations=db.allocations||[];
-if(editingAllocationId){let a=db.allocations.find(x=>x.id===editingAllocationId);if(!a){cancelAllocationEdit();return alert('A alocação selecionada não foi encontrada.')}if(db.allocations.some(x=>x.id!==editingAllocationId&&x.studentId===sid&&x.profId===profId&&x.locationId===loc&&x.shift===shift))return alert('Essa alocação já está cadastrada para este aluno e profissional.');a.studentId=sid;a.profId=profId;a.locationId=loc;a.shift=shift;syncLegacyStudentFields();save();let keepProf=profId,keepLoc=loc,keepShift=shift;cancelAllocationEdit();renderAll();$('allocProf').value=keepProf;$('allocLocation').value=keepLoc;$('allocShift').value=keepShift;alert('Alocação alterada com sucesso.');return}
-if(db.allocations.some(a=>a.studentId===sid&&a.profId===profId&&a.locationId===loc&&a.shift===shift))return alert('Essa alocação já está cadastrada para este aluno e profissional.');db.allocations.push({id:uid('a'),studentId:sid,profId,locationId:loc,shift});syncLegacyStudentFields();save();let keepProf=profId,keepLoc=loc,keepShift=shift;renderAll();$('allocStudent').value='';$('allocStudentBtn').innerHTML='Selecione o aluno <span>▾</span>';$('allocStudentSearch').value='';syncAllocClass();$('allocProf').value=keepProf;$('allocLocation').value=keepLoc;$('allocShift').value=keepShift;alert('Alocação salva com sucesso.')}
+if(editingAllocationId){let a=db.allocations.find(x=>x.id===editingAllocationId);if(!a){cancelAllocationEdit();return alert('A alocação selecionada não foi encontrada.')}if(db.allocations.some(x=>x.id!==editingAllocationId&&x.studentId===sid&&x.profId===profId&&x.locationId===loc&&x.shift===shift))return alert('Essa alocação já está cadastrada para este aluno e profissional.');a.studentId=sid;a.profId=profId;a.locationId=loc;a.shift=shift;syncLegacyStudentFields();save();firestoreSetIfOnline('allocations',a.id,a);let keepProf=profId,keepLoc=loc,keepShift=shift;cancelAllocationEdit();renderAll();$('allocProf').value=keepProf;$('allocLocation').value=keepLoc;$('allocShift').value=keepShift;alert('Alocação alterada com sucesso.');return}
+if(db.allocations.some(a=>a.studentId===sid&&a.profId===profId&&a.locationId===loc&&a.shift===shift))return alert('Essa alocação já está cadastrada para este aluno e profissional.');const newAllocation={id:uid('a'),studentId:sid,profId,locationId:loc,shift};db.allocations.push(newAllocation);syncLegacyStudentFields();save();firestoreSetIfOnline('allocations',newAllocation.id,newAllocation);let keepProf=profId,keepLoc=loc,keepShift=shift;renderAll();$('allocStudent').value='';$('allocStudentBtn').innerHTML='Selecione o aluno <span>▾</span>';$('allocStudentSearch').value='';syncAllocClass();$('allocProf').value=keepProf;$('allocLocation').value=keepLoc;$('allocShift').value=keepShift;alert('Alocação salva com sucesso.')}
 function editAllocation(aid){
 if(getRole()==='teacher')return;
 let a=db.allocations.find(x=>x.id===aid);if(!a)return;
@@ -424,10 +479,10 @@ $('allocCancelEdit').style.display='inline-flex';
 window.scrollTo({top:0,behavior:'smooth'});
 }
 function cancelAllocationEdit(){editingAllocationId='';if($('allocEditStatus'))$('allocEditStatus').style.display='none';if($('allocCancelEdit'))$('allocCancelEdit').style.display='none';}
-function removeAllocation(aid){if(getRole()==='teacher')return;let a=db.allocations.find(x=>x.id===aid);if(!a)return;let st=db.students.find(s=>s.id===a.studentId);if(!confirm('Remover esta alocação de '+(st?.name||'aluno')+'?'))return;db.allocations=db.allocations.filter(x=>x.id!==aid);syncLegacyStudentFields();save();renderAll()}
+function removeAllocation(aid){if(getRole()==='teacher')return;let a=db.allocations.find(x=>x.id===aid);if(!a)return;let st=db.students.find(s=>s.id===a.studentId);if(!confirm('Remover esta alocação de '+(st?.name||'aluno')+'?'))return;db.allocations=db.allocations.filter(x=>x.id!==aid);syncLegacyStudentFields();save();firestoreDeleteIfOnline('allocations',aid);renderAll()}
 function sortAllocations(key){allocSort.dir=allocSort.key===key?-allocSort.dir*-1:1;allocSort.key=key;renderAllocations()}
 function renderAllocations(){if(!$('allocList'))return;let grouped=db.students.map((st,i)=>{let as=db.allocations.filter(a=>a.studentId===st.id).map(a=>({...a,professionalName:db.professionals.find(p=>p.id===a.profId)?.name||'Não definido',locationName:db.locations.find(l=>l.id===a.locationId)?.name||'',shiftObj:shifts.find(x=>x.id===a.shift)}));return {...st,index:i,as}}).filter(x=>x.as.length);grouped.sort((a,b)=>{let av=a.name,bv=b.name;if(allocSort.key==='professional'){av=a.as.map(x=>x.professionalName).sort((x,y)=>x.localeCompare(y,'pt-BR'))[0]||'';bv=b.as.map(x=>x.professionalName).sort((x,y)=>x.localeCompare(y,'pt-BR'))[0]||''}else if(allocSort.key==='location'){av=a.as.map(x=>x.locationName).sort((x,y)=>x.localeCompare(y,'pt-BR'))[0]||'';bv=b.as.map(x=>x.locationName).sort((x,y)=>x.localeCompare(y,'pt-BR'))[0]||''}else if(allocSort.key==='class'){av=normalizeClass(a.className)||'Z';bv=normalizeClass(b.className)||'Z'}else if(allocSort.key==='shift'){av=a.as.map(x=>x.shiftObj?.label||'').sort()[0]||'';bv=b.as.map(x=>x.shiftObj?.label||'').sort()[0]||''}return av.localeCompare(bv,'pt-BR')*allocSort.dir||a.name.localeCompare(b.name,'pt-BR')});$('allocCount').textContent=grouped.length+' alunos alocados';$('allocList').innerHTML=grouped.map(s=>{let ordered=s.as.slice().sort((a,b)=>a.professionalName.localeCompare(b.professionalName,'pt-BR')||a.locationName.localeCompare(b.locationName,'pt-BR')||((a.shiftObj?.label||'').localeCompare(b.shiftObj?.label||'','pt-BR')));let profLines=ordered.map(a=>`<div class="alloc-line"><b>${esc(a.professionalName)}</b></div>`).join('');let localLines=ordered.map(a=>`<div class="alloc-line"><b>${esc(a.locationName)}</b></div>`).join('');let shiftLines=ordered.map(a=>`<div class="alloc-line">${esc(a.shiftObj?.label||'')}</div>`).join('');let actionButtons=ordered.length===1?`<button class="secondary mini-action" title="Editar alocação" onclick="editAllocation('${ordered[0].id}')">✏️</button>`:ordered.map((a,n)=>`<button class="secondary mini-action" title="Editar ${esc(a.locationName)}" onclick="editAllocation('${a.id}')">✏️${n+1}</button>`).join('');return `<tr><td class="student-merged name-cell"><b>${esc(s.name)}</b></td><td class="class-merged">${esc(classLabel(s.className))}</td><td class="professional-cell" style="vertical-align:middle"><div class="multi-line">${profLines}</div></td><td class="local-cell" style="vertical-align:middle"><div class="multi-line">${localLines}</div></td><td class="shift-cell" style="vertical-align:middle"><div class="multi-line">${shiftLines}</div></td><td style="vertical-align:middle"><div class="alloc-actions">${actionButtons}<button class="danger mini-action" title="Excluir todas as alocações" onclick="deleteAllocationsForStudent(${s.index})">🗑️</button></div></td></tr>`}).join('')||'<tr><td colspan="6">Nenhuma alocação cadastrada.</td></tr>'}
-function deleteAllocationsForStudent(i){if(getRole()==='teacher')return;let st=db.students[i];if(!st)return;let count=db.allocations.filter(a=>a.studentId===st.id).length;if(!count)return;if(!confirm('Excluir todas as alocações de '+st.name+'?'))return;db.allocations=db.allocations.filter(a=>a.studentId!==st.id);syncLegacyStudentFields();save();renderAll()}
+function deleteAllocationsForStudent(i){if(getRole()==='teacher')return;let st=db.students[i];if(!st)return;let count=db.allocations.filter(a=>a.studentId===st.id).length;if(!count)return;if(!confirm('Excluir todas as alocações de '+st.name+'?'))return;const removed=db.allocations.filter(a=>a.studentId===st.id).map(a=>a.id);db.allocations=db.allocations.filter(a=>a.studentId!==st.id);syncLegacyStudentFields();save();removed.forEach(id=>firestoreDeleteIfOnline('allocations',id));renderAll()}
 
 function renderSelectors(){let rv=$('reportProf')?.value,rlv=$('reportLocation')?.value,uv=$('roleUser')?.value;fillSelect('reportProf',db.professionals,'Todos os profissionais');fillSelect('reportLocation',db.locations,'Todos os locais');if(db.professionals.some(x=>x.id===rv))$('reportProf').value=rv;if(db.locations.some(x=>x.id===rlv))$('reportLocation').value=rlv;let rp=$('roleUser');if(rp){if(getRole()==='teacher'){fillSelect('roleUser',db.professionals,'Selecione o professor');if(db.professionals.some(x=>x.id===uv))rp.value=uv}else rp.innerHTML='<option value="">Usuário administrativo</option>'}}
 function renderRole(){let r=getRole(),badge={creator:'CRIADOR',admin:'ADMINISTRADOR DA INSTITUIÇÃO',teacher:'PROFESSOR / TÉCNICO'}[r];$('roleBadge').textContent=badge;$('roleHelp').textContent=r==='creator'?'Controla estrutura e permissões.':r==='admin'?'Administra alunos, locais, profissionais e lançamentos.':'Lança e consulta os próprios registros.'}
