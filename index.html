@@ -4,8 +4,9 @@
 <!-- v10.16: correção da tela Acessos e renderização dos cadastros do Firebase
 <!-- v10.19: lista suspensa de cursos e catálogo de cursos -->
 <!-- v10.22: diagnóstico de solicitações, retomada de acesso e lixeira -->
+<!-- v10.23: diagnóstico confiável da fila de aprovação; erros alternativos não são ocultados -->
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Frequência de Estagiários v10.22</title>
+<title>Frequência de Estagiários v10.23</title>
 <style>
 /* v10.15: cabeçalho compacto, sem balões de informação; curso/turma no cadastro de alunos */
 /* v10.16: correção da renderização dos cadastros em Acessos */
@@ -209,11 +210,28 @@ async function loadAccessRequests(){
     pending=pendingSnap.docs.map(d=>({id:d.id,...d.data()}));
     // Recuperação defensiva: se a consulta filtrada vier vazia, confira os documentos acessíveis
     // para evitar mostrar zero pendentes quando houver um registro com status inconsistente.
+    let pendingFallbackUsed=false;
+    let pendingFallbackError=null;
+    let pendingStatusSummary='';
     if(!pending.length){
+      pendingFallbackUsed=true;
       try{
+        // A consulta ampla é apenas diagnóstico de recuperação. Não restringir por role
+        // aqui evita esconder cadastros pendentes antigos com campos incompletos.
         const allUsersSnap=await firebaseDb.collection('users').get({source:'server'});
-        pending=allUsersSnap.docs.map(d=>({id:d.id,...d.data()})).filter(u=>u.status==='pending' && (u.role==='professional'||u.selfRegistered===true));
-      }catch(readAllError){console.warn('Consulta alternativa de solicitações indisponível',readAllError);if(list)list.innerHTML='<div class="notice" style="background:#fee2e2;color:#991b1b">A consulta retornou zero pendentes e a verificação alternativa falhou: '+esc((readAllError?.code?readAllError.code+' • ':'')+(readAllError?.message||'erro desconhecido'))+'. Verifique a permissão de leitura de users no Firestore.</div>';}
+        const allUsers=allUsersSnap.docs.map(d=>({id:d.id,...d.data()}));
+        pending=allUsers.filter(u=>String(u.status||'').trim().toLowerCase()==='pending');
+        if(!pending.length){
+          const counts={};
+          allUsers.forEach(u=>{const key=String(u.status||'(sem status)').trim().toLowerCase();counts[key]=(counts[key]||0)+1;});
+          pendingStatusSummary=' Nenhum documento com status "pending" foi encontrado na coleção users. Status encontrados: '+Object.entries(counts).map(([k,v])=>k+': '+v).join(', ')+'.';
+        }
+      }catch(readAllError){
+        pendingFallbackError=readAllError;
+        console.error('Consulta alternativa de solicitações indisponível',readAllError);
+        // Não continuar renderizando "Nenhum cadastro pendente" após falha de leitura.
+        throw new Error('A consulta de pendentes retornou zero e a leitura de diagnóstico da coleção users falhou ('+(readAllError?.code?readAllError.code+' • ':'')+(readAllError?.message||'erro desconhecido')+'). Confira as regras de leitura da coleção users e a conta administrativa conectada.');
+      }
     }
     let approved=[],blocked=[],deleted=[],admins=[];
     try{const profSnap=await firebaseDb.collection('users').where('role','==','professional').where('status','==','approved').get({source:'server'});approved=profSnap.docs.map(d=>({id:d.id,...d.data()}));}catch(_e){console.warn('Falha ao consultar profissionais aprovados',_e)}
@@ -234,7 +252,7 @@ async function loadAccessRequests(){
     const badge=document.getElementById('pendingBadge'); if(badge){badge.textContent=pending.length;badge.style.display=pending.length?'inline-flex':'none';}
     const sum=document.getElementById('accessSummary'); if(sum)sum.textContent=pending.length+' pendente'+(pending.length===1?'':'s');
     let html='';
-    html += pending.length?`<h3 style="margin:12px 0 6px">Cadastros aguardando aprovação</h3>`+pending.sort((a,b)=>(a.name||a.email||'').localeCompare(b.name||b.email||'','pt-BR')).map(u=>`<div class="access-card"><div class="access-head"><div><div class="access-name">${esc(u.name||'Sem nome')}</div><div class="access-meta">E-mail: ${esc(u.email||'')}<br>CRTR: ${esc(u.crtr||'Não informado')}<br>Telefone: ${esc(u.phone||'Não informado')}<br>Recebimento: ${esc(u.paymentType||'')} ${u.pix?'• '+esc(u.pix):''}</div></div><span class="badge">PENDENTE</span></div><div class="access-actions"><button class="success" onclick="approveUser('${u.id}')">✓ Aprovar</button><button class="danger" onclick="blockUser('${u.id}')">Bloquear</button></div></div>`).join(''):'<div class="notice">Nenhum cadastro pendente.</div>';
+    html += pending.length?`<h3 style="margin:12px 0 6px">Cadastros aguardando aprovação</h3>`+pending.sort((a,b)=>(a.name||a.email||'').localeCompare(b.name||b.email||'','pt-BR')).map(u=>`<div class="access-card"><div class="access-head"><div><div class="access-name">${esc(u.name||'Sem nome')}</div><div class="access-meta">E-mail: ${esc(u.email||'')}<br>CRTR: ${esc(u.crtr||'Não informado')}<br>Telefone: ${esc(u.phone||'Não informado')}<br>Recebimento: ${esc(u.paymentType||'')} ${u.pix?'• '+esc(u.pix):''}</div></div><span class="badge">PENDENTE</span></div><div class="access-actions"><button class="success" onclick="approveUser('${u.id}')">✓ Aprovar</button><button class="danger" onclick="blockUser('${u.id}')">Bloquear</button></div></div>`).join(''):(pendingFallbackUsed && pendingStatusSummary ? '<div class="notice">Nenhum cadastro pendente foi localizado pela consulta ao servidor.'+esc(pendingStatusSummary)+'</div>' : '<div class="notice">Nenhum cadastro pendente.</div>');
     html += approved.length?`<h3 style="margin:14px 0 6px">Profissionais com acesso ativo</h3>`+approved.sort((a,b)=>(a.name||a.email||'').localeCompare(b.name||b.email||'','pt-BR')).map(u=>`<div class="access-card"><div class="access-head"><div><div class="access-name">${esc(u.name||'Profissional')}</div><div class="access-meta">E-mail: ${esc(u.email||'')}<br>CRTR: ${esc(u.crtr||'Não informado')}<br>Telefone: ${esc(u.phone||'Não informado')}<br>Recebimento: ${esc(u.paymentType||'')} ${u.pix?'• '+esc(u.pix):''}</div></div><span class="badge">ATIVO</span></div><div class="access-actions"><button class="danger" onclick="blockUser('${u.id}')">🔒 Bloquear acesso</button><button class="danger" onclick="moveProfessionalToTrash('${u.id}')">🗑️ Excluir</button></div></div>`).join(''):'<div class="notice">Nenhum profissional com acesso ativo.</div>';
     html += blocked.length?`<h3 style="margin:14px 0 6px">Profissionais bloqueados</h3>`+blocked.sort((a,b)=>(a.name||a.email||'').localeCompare(b.name||b.email||'','pt-BR')).map(u=>`<div class="access-card"><div class="access-head"><div><div class="access-name">${esc(u.name||'Profissional')}</div><div class="access-meta">E-mail: ${esc(u.email||'')}<br>CRTR: ${esc(u.crtr||'Não informado')}<br>Telefone: ${esc(u.phone||'Não informado')}<br>Recebimento: ${esc(u.paymentType||'')} ${u.pix?'• '+esc(u.pix):''}</div></div><span class="badge" style="background:#fee2e2;color:#991b1b">BLOQUEADO</span></div><div class="access-meta" style="margin-top:8px">O acesso ao sistema está impedido. O histórico de frequência permanece preservado.</div><div class="access-actions"><button class="success" onclick="unblockUser('${u.id}')">🔓 Desbloquear acesso</button><button class="danger" onclick="moveProfessionalToTrash('${u.id}')">🗑️ Excluir</button></div></div>`).join(''):'';
     if(list)list.innerHTML=html;
